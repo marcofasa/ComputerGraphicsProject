@@ -1,15 +1,15 @@
 #define _USE_MATH_DEFINES
 #include<math.h>
 
-// TODO Rotate 45 degrees around an arbitrary axis passing through (1,0,-1). The x-axis can be aligned to the arbitrary axis after a rotation of 30 degrees around the z-axis, and then -60 degrees around the y-axis.
+    // Rotate 45 degrees around an arbitrary axis passing through (1,0,-1). The x-axis can be aligned to the arbitrary axis after a rotation of 30 degrees around the z-axis, and then -60 degrees around the y-axis.
 
     glm::mat4 MT1 = glm::mat4(1);
 
             glm::mat4 T1a = glm::translate(glm::mat4(1),glm::vec3(1,0,-1)); // T(1,0,-1)
-            glm::mat4 T1b = glm::rotate(glm::mat4(1),(float)(-60 * M_PI / 180.0),glm::vec3(0,1,0)); //R(y-axis)
+            glm::mat4 T1b = glm::rotate(glm::mat4(1),(float)(300 * M_PI / 180.0),glm::vec3(0,1,0)); //R(y-axis)
             glm::mat4 T1c = glm::rotate(glm::mat4(1),(float)(30 * M_PI / 180.0),glm::vec3(0,0,1)); //R(z-axis)
-            glm::mat4 T1d = glm::rotate(glm::mat4(1),(float)(45 * M_PI / 180.0),glm::vec3(1,0,-1)); //R(arbitrary-axis)
-            glm::mat4 T1e = inverse(T1c); //R(y-axis)^-1
+            glm::mat4 T1d = glm::rotate(glm::mat4(1),(float)(45 * M_PI / 180.0),glm::vec3(1,0,0)); //R(arbitrary-axis)
+            glm::mat4 T1e = inverse(T1c); //R(z-axis)^-1
             glm::mat4 T1f = inverse(T1b); //R(y-axis)^-1
             glm::mat4 T1g = inverse(T1a); //T(1,0,-1)^-1
 
