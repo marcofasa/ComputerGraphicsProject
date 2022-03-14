@@ -41,7 +41,7 @@
 
         glm::mat4 T3a = glm::translate(glm::mat4(1),glm::vec3(1,1,1)); //Back
         glm::mat4 T3b = glm::mat4(1,0,0,0, 0,-1,0,0, 0,0,1,0, 0,0,0,1); //Mirror of xz plane
-        glm::mat4 T3c = glm::rotate(glm::mat4(1),(float)(15 * M_PI / 180.0),glm::vec3(1,0,0)); //R(y-axis)
+        glm::mat4 T3c = glm::rotate(glm::mat4(1),(float)(15 * M_PI / 180.0),glm::vec3(1,0,0)); //R(x-axis)
         glm::mat4 T3e = inverse(T3c); //R(y-axis)^-1
         glm::mat4 T3f = inverse(T3a); //T(1,1,1)^-1
 
