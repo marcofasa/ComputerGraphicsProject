@@ -20,7 +20,7 @@ glm::mat4 PO1(float a) {
     float r=a*n*(float)tan(FovY * M_PI / 180.0);
 
     glm::mat4 out1 = glm::scale(glm::mat4(1.0),glm::vec3(1,-1,1))*glm::frustum(l,r,b,t,n,f);
-    glm::mat4 out = glm::perspective(FovY,a,n,f);
+    glm::mat4 out = glm::perspective(float(FovY * M_PI / 180.0),a,n,f);
     out[1][1]*=-1;
 
 	return out;
@@ -35,9 +35,9 @@ glm::mat4 PO2(float a) {
     float l=-1*a*n*(float)tan(FovY * M_PI / 180.0);
     float r=a*n*(float)tan(FovY * M_PI / 180.0);
 	glm::mat4 out1 = glm::scale(glm::mat4(1.0),glm::vec3(1,-1,1))*glm::frustum(l,r,b,t,n,f);
-    glm::mat4 out = glm::perspective(FovY,a,n,f);
-    out1[1][1]*=-1;
-	return out1;
+    glm::mat4 out = glm::perspective(float(FovY * M_PI / 180.0),a,n,f);
+    out[1][1]*=-1;
+	return out;
 }
 
 // Create a matrix for Perspecrtive projection with the given aspect ratio a,
@@ -49,9 +49,9 @@ glm::mat4 PO3(float a) {
     float l=-a*n*(float)tan(FovY * M_PI / 180.0);
     float r=a*n*(float)tan(FovY * M_PI / 180.0);
     glm::mat4 out1 = glm::scale(glm::mat4(1.0),glm::vec3(1,-1,1))*glm::frustum(l,r,b,t,n,f);
-    glm::mat4 out = glm::perspective(FovY,a,n,f);
+    glm::mat4 out = glm::perspective(float(FovY * M_PI / 180.0),a,n,f);
     out[1][1]*=-1;
-	return out1;
+	return out;
 }
 
 // TODO Create a matrix for Perspecrtive projection, with the given aspect ratio a.
@@ -59,7 +59,12 @@ glm::mat4 PO3(float a) {
 // with a FovY = 90o. Here r=0, and l, t and b should be computed
 // to match both the aspect ratio and the FovY
 glm::mat4 PO4(float a) {
-	glm::mat4 out = glm::mat4(1.0);
+    float FovY=90;
+    float t=n*(float)tan(FovY * M_PI / 180.0);
+    float b=-1*n*(float)tan(FovY * M_PI / 180.0);
+    float l=-a*n*(float)tan(FovY * M_PI / 180.0);
+    float r=0;
+    glm::mat4 out = glm::scale(glm::mat4(1.0),glm::vec3(1,-1,1))*glm::frustum(l,r,b,t,n,f);
 	return out;
 }
 
