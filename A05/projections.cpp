@@ -73,7 +73,7 @@ glm::mat4 PO3(float a) {
 // with a FovY = 90o. Here r=0, and l, t and b should be computed
 // to match both the aspect ratio and the FovY
 glm::mat4 PO4(float a) {
-    int FovY=45;
+    int FovY=90/2;
     float t=n*(float)tan(FovY * M_PI / 180.0);
     float b=-1*n*(float)tan(FovY * M_PI / 180.0);
     float l=-a*n*(float)tan(FovY * M_PI / 180.0);
