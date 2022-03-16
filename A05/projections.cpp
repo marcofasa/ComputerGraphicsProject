@@ -7,6 +7,7 @@
 
 float n=0.1,f=9.9;
 /*
+ *              There are 2 ways to compute a Perspective Matrix
  *
     float t=n*(float)tan((FovY * M_PI / 180.0)/2);
     float b=-1*n*(float)tan((FovY * M_PI / 180.0)/2);
@@ -21,7 +22,7 @@ float n=0.1,f=9.9;
 
 */
 
-// Create a matrix for Perspecrtive projection with the given aspect ratio a,
+// Create a matrix for Perspective projection with the given aspect ratio a,
 // and a FovY = 90o
 
 
@@ -39,7 +40,7 @@ glm::mat4 PO1(float a) {
 	return out;
 }
 
-// Create a matrix for Perspecrtive projection with the given aspect ratio a,
+// Create a matrix for Perspective projection with the given aspect ratio a,
 // and a FovY = 120o
 glm::mat4 PO2(float a) {
     float FovY=120;
@@ -53,7 +54,7 @@ glm::mat4 PO2(float a) {
 	return out;
 }
 
-// Create a matrix for Perspecrtive projection with the given aspect ratio a,
+// Create a matrix for Perspective projection with the given aspect ratio a,
 // and a FovY = 30o
 glm::mat4 PO3(float a) {
     float FovY=30;
@@ -67,7 +68,7 @@ glm::mat4 PO3(float a) {
 	return out;
 }
 
-// Create a matrix for Perspecrtive projection, with the given aspect ratio a.
+// Create a matrix for Perspective projection, with the given aspect ratio a.
 // Here the perspective should only show the left side of the view
 // with a FovY = 90o. Here r=0, and l, t and b should be computed
 // to match both the aspect ratio and the FovY
