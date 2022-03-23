@@ -13,11 +13,18 @@ float GtoR(float grades){
  // Angs.z -> roll (rho)
 glm::mat4 LookInDirMat(glm::vec3 Pos, glm::vec3 Angs) {
 	glm::mat4 out = glm::mat4(1.0);
-    out= glm::rotate(glm::mat4(1.0),-GtoR(Angs.z),glm::vec3(0,0,1))*
-             glm::rotate(glm::mat4(1.0),-GtoR(Angs.y),glm::vec3(1,0,0))*
-             glm::rotate(glm::mat4(1.0),-GtoR(Angs.x),glm::vec3(0,1,0))*
-             glm::translate(glm::mat4(1.0),Pos);
+    out=    glm::translate(glm::mat4(1.0),Pos)
+            *glm::rotate(glm::mat4(1.0),Angs.x,glm::vec3(0,1,0))
+            *glm::rotate(glm::mat4(1.0),Angs.y,glm::vec3(1,0,0))
+            *glm::rotate(glm::mat4(1.0),Angs.z,glm::vec3(0,0,1));
     out=glm::inverse(out);
+    /*        OR Compute directly the inverse of Mc
+     *     out=    glm::translate(glm::mat4(1.0),Pos) Where pos has its coordinates multiplied by -1
+            *glm::rotate(glm::mat4(1.0),Angs.x,glm::vec3(0,1,0))
+            *glm::rotate(glm::mat4(1.0),Angs.y,glm::vec3(1,0,0))
+            *glm::rotate(glm::mat4(1.0),Angs.z,glm::vec3(0,0,1));
+     */
+
 	return out;
 }
 
@@ -28,6 +35,8 @@ glm::mat4 LookInDirMat(glm::vec3 Pos, glm::vec3 Angs) {
 glm::mat4 LookAtMat(glm::vec3 Pos, glm::vec3 aim, float Roll) {
 	glm::mat4 out = glm::mat4(1.0);
     out=glm::lookAt(Pos,aim,glm::vec3(0,1,0));
+
+
 	return out;
 }
 
