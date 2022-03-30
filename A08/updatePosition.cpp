@@ -21,24 +21,34 @@ glm::mat4 getRobotWorldMatrix(GLFWwindow* window) {
     float deltaT = time - w::lastTime;
     w::lastTime = time;
 
+    bool movement=false;
+    bool rotation=false;
+
+
     //MOVEMENT <--> A,S,D,W
     if(glfwGetKey(window, GLFW_KEY_A)) {
-        w::CamPos  -= MOVE_SPEED * glm::vec3( w::CamPos [0]) * deltaT;
+        w::CamPos  -= MOVE_SPEED * glm::vec3( w::CamDir[0]) * deltaT;
+        movement=true;
     }
     if(glfwGetKey(window, GLFW_KEY_D)) {
         w::CamPos += MOVE_SPEED * glm::vec3(w::CamDir[0]) * deltaT;
+        movement=true;
     }
     if(glfwGetKey(window, GLFW_KEY_S)) {
         w:: CamPos += MOVE_SPEED * glm::vec3(w::CamDir[2]) * deltaT;
+        movement=true;
     }
     if(glfwGetKey(window, GLFW_KEY_W)) {
         w:: CamPos -= MOVE_SPEED * glm::vec3(w::CamDir[2]) * deltaT;
+        movement=true;
     }
     if(glfwGetKey(window, GLFW_KEY_F)) {
         w:: CamPos -= MOVE_SPEED * glm::vec3(w::CamDir[1]) * deltaT;
+        movement=true;
     }
     if(glfwGetKey(window, GLFW_KEY_R)) {
         w:: CamPos += MOVE_SPEED * glm::vec3(w::CamDir[1]) * deltaT;
+        movement=true;
     }
 
     //ROTATION <--> ARROWS
@@ -46,28 +56,33 @@ glm::mat4 getRobotWorldMatrix(GLFWwindow* window) {
         w::CamDir = glm::mat3(glm::rotate(glm::mat4(1.0f),
                                        deltaT * ROT_SPEED,
                                        glm::vec3( w::CamDir[1])) * glm::mat4( w::CamDir));
+        rotation= true;
     }
     if(glfwGetKey(window, GLFW_KEY_RIGHT)) {
         w::CamDir = glm::mat3(glm::rotate(glm::mat4(1.0f),
                                        -deltaT * ROT_SPEED,
                                        glm::vec3( w::CamDir[1])) * glm::mat4( w::CamDir));
+        rotation= true;
     }
     if(glfwGetKey(window, GLFW_KEY_UP)) {
         w::CamDir = glm::mat3(glm::rotate(glm::mat4(1.0f),
                                        deltaT * ROT_SPEED,
                                        glm::vec3( w::CamDir[0])) * glm::mat4( w::CamDir));
+        rotation= true;
     }
     if(glfwGetKey(window, GLFW_KEY_DOWN)) {
         w::CamDir = glm::mat3(glm::rotate(glm::mat4(1.0f),
                                        -deltaT * ROT_SPEED,
                                        glm::vec3( w::CamDir[0])) * glm::mat4( w::CamDir));
+        rotation= true;
     }
 
 
 //Passing to output
     glm::mat4 out;
-
         out = glm::translate(glm::mat4(1), w::CamPos );
+
+
 
 	return out;
 }
