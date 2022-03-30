@@ -9,6 +9,7 @@ namespace w
     glm::vec3 CamPos = glm::vec3(-3.0f,0.0f,2.0f);
     static auto startTime = std::chrono::high_resolution_clock::now();
     float lastTime = 0.0f;
+    glm::mat4 out= glm::translate(glm::mat4(1), w::CamPos );
 }
 
 
@@ -31,43 +32,41 @@ glm::mat4 getRobotWorldMatrix(GLFWwindow* window) {
     float deltaT = time - w::lastTime;
     w::lastTime = time;
 
-    //output
-    glm::mat4 out;
+
+
 
     //MOVEMENT <--> A west ,S south ,D right,W north
     if(glfwGetKey(window, GLFW_KEY_A)) {
         w::CamPos  -= MOVE_SPEED * glm::vec3( w::CamDir[0]) * deltaT;
-        out= EulerRoll(w::CamPos,glm::radians(180.0f));
-        return out;
+        w:: out= EulerRoll(w::CamPos,glm::radians(180.0f));
     }
     //No roll because by default is looking right
     if(glfwGetKey(window, GLFW_KEY_D)) {
         w::CamPos += MOVE_SPEED * glm::vec3(w::CamDir[0]) * deltaT;
+        w:: out= EulerRoll(w::CamPos,glm::radians(0.0f));
     }
 
     if(glfwGetKey(window, GLFW_KEY_S)) {
         w:: CamPos += MOVE_SPEED * glm::vec3(w::CamDir[2]) * deltaT;
-        out= EulerRoll(w::CamPos,glm::radians(-90.0f));
-        return out;
+        w:: out= EulerRoll(w::CamPos,glm::radians(-90.0f));
     }
     if(glfwGetKey(window, GLFW_KEY_W)) {
         w:: CamPos -= MOVE_SPEED * glm::vec3(w::CamDir[2]) * deltaT;
-        out= EulerRoll(w::CamPos,glm::radians(90.0f));
-        return out;
+        w:: out= EulerRoll(w::CamPos,glm::radians(90.0f));
     }
     //DOWN
     if(glfwGetKey(window, GLFW_KEY_F)) {
         w:: CamPos -= MOVE_SPEED * glm::vec3(w::CamDir[1]) * deltaT;
+        w:: out= EulerRoll(w::CamPos,glm::radians(0.0f));
     }
 
     //UP
     if(glfwGetKey(window, GLFW_KEY_R)) {
         w:: CamPos += MOVE_SPEED * glm::vec3(w::CamDir[1]) * deltaT;
+        w:: out= EulerRoll(w::CamPos,glm::radians(0.0f));
     }
 
-    //Passing to output if no Euler Roll Matrix applied
-    out = glm::translate(glm::mat4(1), w::CamPos );
 
-    return out;
+    return w:: out;
 }
 
