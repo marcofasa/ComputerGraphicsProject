@@ -1,3 +1,9 @@
+namespace t{
+
+}
+
+
+
 // this function creates the geometries to be shown, and output thems
 // in global variables M1_vertices and M1_indices to M4_vertices and M4_indices
 void makeModels() {
@@ -5,45 +11,25 @@ void makeModels() {
 // Replace the code below, that creates a simple square, with the one to create a cube.
 
 // Resizes the vertices array. Repalce the values with the correct number of
-// vertices components (3 * number of vertices)
-M1_vertices.resize(3 * 4);
+// vertices components (3 * number of vertices==8)
+M1_vertices.resize(3 * 8);
 
-// first vertex of M1
-M1_vertices[0] = -1.0;
-M1_vertices[1] = -1.0;
-M1_vertices[2] = -1.0;
-
-// second vertex of M1
-M1_vertices[3] =  1.0;
-M1_vertices[4] = -1.0;
-M1_vertices[5] = -1.0;
-
-// third vertex of M1
-M1_vertices[6] =  1.0;
-M1_vertices[7] =  1.0;
-M1_vertices[8] = -1.0;
-
-// fourth vertex of M1
-M1_vertices[9] = -1.0;
-M1_vertices[10] =  1.0;
-M1_vertices[11] = -1.0;
-
-
+    M1_vertices= {0,0,0,  0,0,1, // Vertex array:
+                0,1,1,  0,1,0, // x y z for
+                1,0,0,  1,0,1, // 8 different vertices
+                1,1,1,  1,1,0};
 // Resizes the indices array. Repalce the values with the correct number of
 // indices (3 * number of triangles)
-M1_indices.resize(3 * 2);
-
-// first triangle
-M1_indices[0] = 0;
-M1_indices[1] = 1;
-M1_indices[2] = 2;
-
-// second triangle
-M1_indices[3] = 2;
-M1_indices[4] = 3;
-M1_indices[5] = 0;
+M1_indices.resize(3*12);
 
 
+
+    M1_indices={0,1,2, 2,3,0,
+                0,3,4, 4,3,7,   // 36 indices
+            5,6,7, 7,4,5,   // to the vertices of
+            1,6,5, 1,2,6,   // 12 triangles composing
+            7,6,2, 3,2,7,   // 6 faces of a cube
+            4,5,0, 1,0,5};
 
 
 
