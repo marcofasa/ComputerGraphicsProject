@@ -66,28 +66,54 @@ int NSlices=36;
 float radius = 1;
 float height =1;
 float cx=0.0,cy=0.0,cz=-3.0;
-M2_vertices.resize((NSlices+1)*3);
+M2_vertices.resize((NSlices+1)*6);
 
 // Vertices definitions
 M2_vertices[0] = cx;
 M2_vertices[1] = cy + height;
 M2_vertices[2] = cz;
 
+    M2_vertices[3] = cx;
+    M2_vertices[4] = cy - height;
+    M2_vertices[5] = cz;
+
 for(int i=0;i<NSlices;i++){
-    M2_vertices[(i+1)*3 +0]= cx+radius*cos((float)(i*2.0*M_PI/NSlices));
-    M2_vertices[(i+1)*3 +1]= cy+height;
-    M2_vertices[(i+1)*3 +2]= cz+radius*sin((float)(i*2.0*M_PI/NSlices));
+    M2_vertices[(i+1)*6 +0]= cx+radius*cos((float)(i*2.0*M_PI/NSlices));
+    M2_vertices[(i+1)*6 +1]= cy+height;
+    M2_vertices[(i+1)*6 +2]= cz+radius*sin((float)(i*2.0*M_PI/NSlices));
+    //----
+    M2_vertices[(i+1)*6 +3]= cx+radius*cos((float)((i+1)*2.0*M_PI/NSlices));
+    M2_vertices[(i+1)*6 +4]= cy-height;
+    M2_vertices[(i+1)*6 +5]= cz+radius*sin((float)((i+1)*2.0*M_PI/NSlices));
 }
 
 // Resizes the indices array. Repalce the values with the correct number of
 // indices (3 * number of triangles)
-M2_indices.resize(3* NSlices);
+M2_indices.resize(12* NSlices);
 
-    for (int i=0;i<NSlices;i++){
-        M2_indices[i*3]=0;
-        M2_indices[i*3+1]=i+1;
+    for (int i=1;i<NSlices;i++){
+        M2_indices[i*12]=0;
+        M2_indices[i*12+1]=i+1;
         //At the last iteration we must return to zero index because we are going overflow with the number of vertex
-        M2_indices[i*3+2]=(i+1)% NSlices + 1;
+        M2_indices[i*12+2]=(i+2)% NSlices + 1;
+        //Triangolo sopra
+
+
+        M2_indices[i*12+3]=i+1;
+        M2_indices[i*12+4]=(i+2)% NSlices + 1;;
+        //At the last iteration we must return to zero index because we are going overflow with the number of vertex
+        M2_indices[i*12+5]=(i+3)% NSlices + 1;
+
+        M2_indices[i*12+6]=(i+4)% NSlices + 1;
+        M2_indices[i*12+7]=(i+2)% NSlices + 1;;
+        //At the last iteration we must return to zero index because we are going overflow with the number of vertex
+        M2_indices[i*12+8]=(i+3)% NSlices + 1;
+//Quadrato
+
+        M2_indices[i*12+9]=1;
+        M2_indices[i*12+10]=(i+2)% NSlices + 1;;
+        //At the last iteration we must return to zero index because we are going overflow with the number of vertex
+        M2_indices[i*12+11]=(i+4)% NSlices + 1;
 
     }
 
