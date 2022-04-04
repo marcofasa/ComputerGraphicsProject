@@ -96,7 +96,7 @@ int a=2,b=3,c=4,d=5;
         M2_indices[i*12+1]=a;
 
         //At the last iteration we must return to zero index because we are going overflow with the number of vertex
-        M2_indices[i*12+2]=(c);
+        M2_indices[i*12+2]=(c)% (2*NSlices);
         //Triangolo sopra
 
 
