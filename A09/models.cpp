@@ -62,7 +62,7 @@ M1_indices.resize(3*12);
  *
  */
 
-int NSlices=72;
+int NSlices=12*6;
 float radius = 1;
 float height =1;
 float cx=0.0,cy=0.0,cz=-3.0;
@@ -101,20 +101,20 @@ int a=2,b=3,c=4,d=5;
 
 
         M2_indices[i*12+3]=a;
-        M2_indices[i*12+4]=(b)% NSlices ;
+        M2_indices[i*12+4]=(b) ;
         //At the last iteration we must return to zero index because we are going overflow with the number of vertex
-        M2_indices[i*12+5]=(d)% NSlices ;
+        M2_indices[i*12+5]=(d)% (2*NSlices);
 
-        M2_indices[i*12+6]=(a)% NSlices ;
-        M2_indices[i*12+7]=(c)% NSlices ;
+        M2_indices[i*12+6]=(a) ;
+        M2_indices[i*12+7]=(c)% (2*NSlices) ;
         //At the last iteration we must return to zero index because we are going overflow with the number of vertex
-        M2_indices[i*12+8]=(d)% NSlices ;
+        M2_indices[i*12+8]=(d)% (2*NSlices)  ;
 //Quadrato
 
         M2_indices[i*12+9]=1;
-        M2_indices[i*12+10]=(b)% NSlices ;
+        M2_indices[i*12+10]=(b)  ;
         //At the last iteration we must return to zero index because we are going overflow with the number of vertex
-        M2_indices[i*12+11]=(d)% NSlices ;
+        M2_indices[i*12+11]=d % (2*NSlices) ;
 
         a=a+2;
         b=b+2;
