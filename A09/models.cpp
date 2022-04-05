@@ -225,7 +225,7 @@ int stackCount=50,sectorCount=50;
             M3_vertices[(i*sectorCount*3)+(j*3)+2]=z;
         }}
 
-M3_indices.resize((sectorCount*stackCount+1)*6);
+M3_indices.resize((sectorCount*stackCount+3a)*6);
     int k1, k2;
     for(int i = 0; i < stackCount; ++i)
     {
@@ -238,7 +238,7 @@ M3_indices.resize((sectorCount*stackCount+1)*6);
             // |  / |
             // | /  |
             // k2--k2+1
-            if (i != 0 &&  i!=(stackCount - 1)) {
+            if (i != 0 && (i != (stackCount-1))) {
                 M3_indices[(i*sectorCount*6)+(j*6)]=k1;
                 M3_indices[(i*sectorCount*6)+(j*6)+1]=k2;
                 M3_indices[(i*sectorCount*6)+(j*6)+2]=(k1 + 1);
@@ -246,7 +246,6 @@ M3_indices.resize((sectorCount*stackCount+1)*6);
                 M3_indices[(i*sectorCount*6)+(j*6)+4]=(k2);
                 M3_indices[(i*sectorCount*6)+(j*6)+5]=(k2 + 1);
             }
-
 
         }}
 
