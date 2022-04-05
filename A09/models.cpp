@@ -62,7 +62,7 @@ M1_indices.resize(3*12);
  *
  */
 
-int NSlices=12*6;
+int NSlices=33;
 float radius = 1;
 float height =1;
 float cx=0.0,cy=0.0,cz=-3.0;
@@ -90,31 +90,31 @@ for(int i=0;i<NSlices;i++){
 // Resizes the indices array. Repalce the values with the correct number of
 // indices (3 * number of triangles)
 M2_indices.resize(12* NSlices);
-int a=2,b=3,c=4,d=5;
+int a=0,b=1,c=2,d=3;
     for (int i=0;i<NSlices;i++){
         M2_indices[i*12]=0;
-        M2_indices[i*12+1]=a;
+        M2_indices[i*12+1]=(a% ((NSlices)*2)) +2;
 
         //At the last iteration we must return to zero index because we are going overflow with the number of vertex
-        M2_indices[i*12+2]=(c)% ((NSlices+1)*2);
+        M2_indices[i*12+2]=(c% ((NSlices)*2)) +2;
         //Triangolo sopra
 
 
-        M2_indices[i*12+3]=a;
-        M2_indices[i*12+4]=(b)% ((NSlices+1)*2 ) ;
+        M2_indices[i*12+3]=(a% ((NSlices)*2)) +2;
+        M2_indices[i*12+4]=(b% ((NSlices)*2)) +2;
         //At the last iteration we must return to zero index because we are going overflow with the number of vertex
-        M2_indices[i*12+5]=(d)% ((NSlices+1)*2);
+        M2_indices[i*12+5]=(d% ((NSlices)*2)) +2;
 
-        M2_indices[i*12+6]=(a)% ((NSlices+1)*2) ;
-        M2_indices[i*12+7]=(c)% ((NSlices+1)*2) ;
+        M2_indices[i*12+6]=(a% ((NSlices)*2)) +2 ;
+        M2_indices[i*12+7]=(c% ((NSlices)*2)) +2;
         //At the last iteration we must return to zero index because we are going overflow with the number of vertex
-        M2_indices[i*12+8]=(d)% ((NSlices+1)*2)  ;
+        M2_indices[i*12+8]=(d% ((NSlices)*2)) +2 ;
 //Quadrato
 
         M2_indices[i*12+9]=1;
-        M2_indices[i*12+10]=(b)% ((NSlices+1)*2)  ;
+        M2_indices[i*12+10]=(b% ((NSlices)*2)) +2 ;
         //At the last iteration we must return to zero index because we are going overflow with the number of vertex
-        M2_indices[i*12+11]=d % ((NSlices+1)*2) ;
+        M2_indices[i*12+11]=(d % ((NSlices)*2)) +2;
 
         a=a+2;
         b=b+2;
@@ -125,7 +125,6 @@ int a=2,b=3,c=4,d=5;
 
 
 //// M3 : Sphere
-// Replace the code below, that creates a simple triangle, with the one to create a sphere.
 
 // Resizes the vertices array. Repalce the values with the correct number of
 // vertices components (3 * number of vertices)
