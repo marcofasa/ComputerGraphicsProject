@@ -125,36 +125,130 @@ int a=0,b=1,c=2,d=3;
 
 
 //// M3 : Sphere
-
 // Resizes the vertices array. Repalce the values with the correct number of
 // vertices components (3 * number of vertices)
-M3_vertices.resize(9);
 
-// Vertices definitions
-M3_vertices[0]  =  0.0;
-M3_vertices[1]  =  1.0;
-M3_vertices[2]  = -1.2;
-M3_vertices[3]  = -0.866;
-M3_vertices[4]  = -0.5;
-M3_vertices[5]  = -1.2;
-M3_vertices[6]  =  0.866;
-M3_vertices[7]  = -0.5;
-M3_vertices[8]  = -1.2;
+/*
+    float x, y, z;                             // vertex position
+    float stackCount=40;
+    float sectorCount=40;
+    float sectorStep = 2 * M_PI / sectorCount;
+    float stackStep = M_PI / stackCount;
+    float theta, stackAngle;
+    float r=2;
+    float phi;
+    M3_vertices.resize((sectorCount*stackCount)*3*4);
+    for(int i = 0; i <= stackCount; ++i)
+    {
+        phi = (M_PI / 2) - (stackStep * i));        // starting from pi/2 to -pi/2
+        z= r*sinf(phi);
+        // add (sectorCount+1) vertices per stack
+        // the first and last vertices have same position and normal, but different tex coords
+        for(int j = 0; j <= sectorCount; ++j) {
+            theta = j * sectorStep;           // starting from 0 to 2pi
+
+            // vertex position (x, y, z)
+            x = r * cosf(phi) * cosf(theta);             // r * cos(u) * cos(v)
+            y = r * cosf(phi) * sinf(theta);             // r * cos(u) * sin(v)
 
 
-// Resizes the indices array. Repalce the values with the correct number of
+            M3_vertices.push_back(x);
+            M3_vertices.push_back(y);
+            M3_vertices.push_back(z);
+
+
+        }}
+
+
+
+// generate CCW index list of sphere triangles
+// k1--k1+1
+// |  / |
+// | /  |
+// k2--k2+1
+
+// Resizes the indices array. Replace the values with the correct number of
 // indices (3 * number of triangles)
-M3_indices.resize(3* 10);
+M3_indices.resize(sectorCount*stackCount*6);
 
-// indices definitions
-M3_indices[0] = 0;
-M3_indices[1] = 1;
-M3_indices[2] = 2;
+    int k1, k2;
+    for(int i = 0; i < stackCount; ++i)
+    {
+        k1 = i * (sectorCount + 1);     // beginning of current stack
+        k2 = k1 + sectorCount + 1;      // beginning of next stack
+
+        for(int j = 0; j < sectorCount; ++j, ++k1, ++k2)
+        {
+            // 2 triangles per sector excluding first and last stacks
+            // k1 => k2 => k1+1
+            if(i != 0)
+            {
+                M3_indices.push_back(k1);
+                M3_indices.push_back(k2);
+                M3_indices.push_back(k1 + 1);
+            }
+
+            // k1+1 => k2 => k2+1
+            if(i != (stackCount-1))
+            {
+                M3_indices.push_back(k1 + 1);
+                M3_indices.push_back(k2);
+                M3_indices.push_back(k2 + 1);
+            }
+        }
+    }
+*/
+int stackCount=50,sectorCount=50;
+
+    float x, y, z, xy;                              // vertex position
+    float sectorStep = 2 * M_PI / sectorCount;
+    float stackStep = M_PI / stackCount;
+    float sectorAngle, stackAngle;
+    M3_vertices.resize((sectorCount*stackCount+2)*3);
+
+    for(int i = 0; i <= stackCount; ++i)
+    {
+        stackAngle = M_PI / 2 - i * stackStep;        // starting from pi/2 to -pi/2
+        xy = radius * cos(stackAngle);             // r * cos(u)
+        z = radius * sin(stackAngle);              // r * sin(u)
+
+        // add (sectorCount+1) vertices per stack
+        // the first and last vertices have same position and normal, but different tex coords
+        for(int j = 0; j <= sectorCount; ++j) {
+            sectorAngle = j * sectorStep;           // starting from 0 to 2pi
+
+            // vertex position (x, y, z)
+            x = xy * cos(sectorAngle);             // r * cos(u) * cos(v)
+            y = xy * sin(sectorAngle);             // r * cos(u) * sin(v)
+            M3_vertices[(i*sectorCount*3)+(j*3)]=x;
+            M3_vertices[(i*sectorCount*3)+(j*3)+1]=y;
+            M3_vertices[(i*sectorCount*3)+(j*3)+2]=z;
+        }}
+
+M3_indices.resize((sectorCount*stackCount+1)*6);
+    int k1, k2;
+    for(int i = 0; i < stackCount; ++i)
+    {
+        k1 = (i * sectorCount) +1  ;     // beginning of current stack
+        k2 = k1 + sectorCount  ;      // beginning of next stack
+
+        for(int j = 0; j < sectorCount; ++j, ++k1, ++k2) {
+            // 2 triangles per sector excluding first and last
+            // k1--k1+1
+            // |  / |
+            // | /  |
+            // k2--k2+1
+            if (i != 0 &&  i!=(stackCount - 1)) {
+                M3_indices[(i*sectorCount*6)+(j*6)]=k1;
+                M3_indices[(i*sectorCount*6)+(j*6)+1]=k2;
+                M3_indices[(i*sectorCount*6)+(j*6)+2]=(k1 + 1);
+                M3_indices[(i*sectorCount*6)+(j*6)+3]=(k1 + 1);
+                M3_indices[(i*sectorCount*6)+(j*6)+4]=(k2);
+                M3_indices[(i*sectorCount*6)+(j*6)+5]=(k2 + 1);
+            }
 
 
-
-
-
+        }}
 
 
 
