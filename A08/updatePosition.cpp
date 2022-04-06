@@ -54,6 +54,8 @@ glm::mat4 getRobotWorldMatrix(GLFWwindow* window) {
         w:: CamPos -= MOVE_SPEED * glm::vec3(w::CamDir[2]) * deltaT;
         w:: out= EulerRoll(w::CamPos,glm::radians(90.0f));
     }
+
+    /**
     //DOWN
     if(glfwGetKey(window, GLFW_KEY_F)) {
         w:: CamPos -= MOVE_SPEED * glm::vec3(w::CamDir[1]) * deltaT;
@@ -65,7 +67,7 @@ glm::mat4 getRobotWorldMatrix(GLFWwindow* window) {
         w:: CamPos += MOVE_SPEED * glm::vec3(w::CamDir[1]) * deltaT;
         w:: out= EulerRoll(w::CamPos,glm::radians(0.0f));
     }
-
+    */
 
     return w:: out;
 }

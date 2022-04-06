@@ -1,5 +1,7 @@
 CFLAGS = -std=c++17 -O2
 INC=-I./headers
+GLSLC_PATH = /Users/fasa/VulkanSDK/1.3.204.0/macOS/bin
+SHADER_FOLDER = ./shaders
 LDFLAGS = -lglfw -lvulkan -ldl -lpthread
 .PHONY: A10 run clean
 A10: Assignment10.cpp
@@ -14,13 +16,14 @@ clean:
 	rm -f A10
 
 shader:
-	/Users/fasa/VulkanSDK/1.3.204.0/macOS/bin/glslc shaders/PBRShader.vert -o shaders/PBRVert.spv
-	/Users/fasa/VulkanSDK/1.3.204.0/macOS/bin/glslc shaders/PBRShader.frag -o shaders/PBRFrag.spv
-	/Users/fasa/VulkanSDK/1.3.204.0/macOS/bin/glslc shaders/SkyBoxShader.vert -o shaders/SkyBoxVert.spv
-	/Users/fasa/VulkanSDK/1.3.204.0/macOS/bin/glslc shaders/SkyBoxShader.frag -o shaders/SkyBoxFrag.spv
+	$(GLSLC_PATH)/glslc $(SHADER_FOLDER)/PBRShader.frag -o $(SHADER_FOLDER)/PBRFrag.spv
+	$(GLSLC_PATH)/glslc $(SHADER_FOLDER)/PBRShader.vert -o $(SHADER_FOLDER)/PBRVert.spv
+	$(GLSLC_PATH)/glslc $(SHADER_FOLDER)/SkyBoxShader.frag -o $(SHADER_FOLDER)/SkyBoxFrag.spv
+	$(GLSLC_PATH)/glslc $(SHADER_FOLDER)/SkyBoxShader.vert -o $(SHADER_FOLDER)/SkyBoxVert.spv
+
 
 alternativeShader:
-	/Users/fasa/VulkanSDK/1.3.204.0/macOS/bin/glslc shaders/Assignment10altVersions/PBRShader.vert -o shaders/Assignment10altVersions/PBRVert.spv
-	/Users/fasa/VulkanSDK/1.3.204.0/macOS/bin/glslc shaders/Assignment10altVersions/PBRShader.frag -o shaders/Assignment10altVersions/PBRFrag.spv
-	/Users/fasa/VulkanSDK/1.3.204.0/macOS/bin/glslc shaders/Assignment10altVersions/SkyBoxShader.vert -o shaders/Assignment10altVersions/SkyBoxVert.spv
-	/Users/fasa/VulkanSDK/1.3.204.0/macOS/bin/glslc shaders/Assignment10altVersions/SkyBoxShader.frag -o shaders/Assignment10altVersions/SkyBoxFrag.spv
+	$(GLSLC_PATH)/glslc $(SHADER_FOLDER)/Assignment10altVersions/PBRShader.vert -o $(SHADER_FOLDER)/Assignment10altVersions/PBRVert.spv
+	$(GLSLC_PATH)/glslc $(SHADER_FOLDER)/Assignment10altVersions/PBRShader.frag -o $(SHADER_FOLDER)/Assignment10altVersions/PBRFrag.spv
+	$(GLSLC_PATH)/glslc $(SHADER_FOLDER)/Assignment10altVersions/SkyBoxShader.vert -o $(SHADER_FOLDER)/Assignment10altVersions/SkyBoxVert.spv
+	$(GLSLC_PATH)/glslc $(SHADER_FOLDER)/Assignment10altVersions/SkyBoxShader.frag -o $(SHADER_FOLDER)/Assignment10altVersions/SkyBoxFrag.spv

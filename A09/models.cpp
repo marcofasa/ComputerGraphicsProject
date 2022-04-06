@@ -198,13 +198,13 @@ M3_indices.resize(sectorCount*stackCount*6);
         }
     }
 */
-int stackCount=50,sectorCount=50;
+int stackCount=20,sectorCount=20;
 
     float x, y, z, xy;                              // vertex position
     float sectorStep = 2 * M_PI / sectorCount;
     float stackStep = M_PI / stackCount;
     float sectorAngle, stackAngle;
-    M3_vertices.resize((sectorCount*stackCount+2)*3);
+    M3_vertices.resize((sectorCount*stackCount+1)*3);
 
     for(int i = 0; i <= stackCount; ++i)
     {
@@ -223,29 +223,43 @@ int stackCount=50,sectorCount=50;
             M3_vertices[(i*sectorCount*3)+(j*3)]=x;
             M3_vertices[(i*sectorCount*3)+(j*3)+1]=y;
             M3_vertices[(i*sectorCount*3)+(j*3)+2]=z;
+            printf("vertex %d %d \t %f %f %f \n", i ,j,x,y,z);
         }}
 
-M3_indices.resize((sectorCount*stackCount+3a)*6);
+M3_indices.resize((sectorCount*stackCount+2)*8);
     int k1, k2;
     for(int i = 0; i < stackCount; ++i)
     {
         k1 = (i * sectorCount) +1  ;     // beginning of current stack
-        k2 = k1 + sectorCount  ;      // beginning of next stack
+        k2 = k1 + sectorCount  ;    // beginning of next stack
 
         for(int j = 0; j < sectorCount; ++j, ++k1, ++k2) {
-            // 2 triangles per sector excluding first and last
             // k1--k1+1
             // |  / |
             // | /  |
             // k2--k2+1
-            if (i != 0 && (i != (stackCount-1))) {
+            // 2 triangles per sector excluding first and last
+            if(i != 0)
+            {
                 M3_indices[(i*sectorCount*6)+(j*6)]=k1;
-                M3_indices[(i*sectorCount*6)+(j*6)+1]=k2;
-                M3_indices[(i*sectorCount*6)+(j*6)+2]=(k1 + 1);
-                M3_indices[(i*sectorCount*6)+(j*6)+3]=(k1 + 1);
-                M3_indices[(i*sectorCount*6)+(j*6)+4]=(k2);
+                M3_indices[(i*sectorCount*6)+(j*6)+1]=k2+1 ;
+                M3_indices[(i*sectorCount*6)+(j*6)+2]=(k1 + 2);
+            }
+            else{
+                M3_indices[(j*3)]=(0);
+                M3_indices[(j*3)+1]=(k2) ;
+                M3_indices[(j*3)+2]=(k2 + 1);
+                continue;
+            }
+
+            if(i != (stackCount-1))
+            {
+                M3_indices[(i*sectorCount*6)+(j*6)+3]=(k1+1);
+                M3_indices[(i*sectorCount*6)+(j*6)+4]=(k2) ;
                 M3_indices[(i*sectorCount*6)+(j*6)+5]=(k2 + 1);
             }
+
+
 
         }}
 
