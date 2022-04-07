@@ -161,28 +161,94 @@ void Sphere(int stackCount,int sectorCount,float radius,std::vector<float>& vert
         }}
 }
 
+void Spring(std::vector<float>& vertices,std::vector<uint32_t>& indices){
+   float radius=1;
+    int sectorCount=30,stackCount=10,NSlices=10;
+
+    float x, y, z,x1, y1, z1, xy;                              // vertex position
+    float sectorStep = 2 * M_PI / sectorCount;
+    float stackStep = 2 * M_PI / stackCount;
+
+    float sectorAngle, stackAngle;
+int j=0;
+    int a = 0, b = 1, c = 2, d = 3;
+
+    //VERTEX definition (SPACE NEEDED -> ((sectorCount+1)*(stackCount+1))*3) )
+    for(int m = 0; m <= stackCount; ++m) {
+        stackAngle =  (m * stackStep);        // starting from pi/2 to -pi/2
+        z = radius * cosf(stackAngle);              // r * sin(u)
+        x = 10 * stackAngle;             // r * cos(u) * cos(v)
+        // y = radius * sinf(stackAngle);             // r * cos(u) * sin(v)
+            vertices.push_back(x);
+            vertices.push_back(y);
+            vertices.push_back(z);
+            //printf("vertex \t %f %f %f \n", x,y,z);
+
+            j++;
+        stackAngle =  ((m+1) * stackStep);        // starting from pi/2 to -pi/2
+        z1 = radius * cosf(stackAngle);
+        x1 = 10 * (stackAngle) ;             // r * cos(u) * cos(v)
+        y1 = radius * sinf(stackAngle);             // r * cos(u) * sin(v)
+        vertices.push_back(x);
+        vertices.push_back(y);
+        vertices.push_back(z);
+
+
+
+        for (int i = 0; i < NSlices; i++) {
+
+            //Top Vertex
+            vertices.push_back(x);
+            vertices.push_back(y+ radius * cos((float) (i * 2.0 * M_PI / NSlices)));
+            vertices.push_back(z + radius * sin((float) (i * 2.0 * M_PI / NSlices)));
+
+            //Bottom Vertexes
+            vertices.push_back(x1);
+            vertices.push_back(y1  + radius * cos((float) (i * 2.0 * M_PI / NSlices)));
+            vertices.push_back(z1 + radius * sin((float) (i * 2.0 * M_PI / NSlices)));
+        }
+        // Indices definition ( SPACE NEEDED -> 12* NSlices )
+        for (int i = 0; i < NSlices; i++) {
+
+
+
+            //BODY
+            indices.push_back((a) + 2);
+            indices.push_back((b ) + 2);
+            indices.push_back((d) + 2);
+            indices.push_back((a ) + 2);
+            indices.push_back((c ) + 2);
+            indices.push_back((d ) + 2);
+
+
+            a = a + 2;
+            b = b + 2;
+            c = c + 2;
+            d = d + 2;
+        }
+    }
+}
 
 void makeModels() {
 //// M1 : Cube
 
-M1_vertices.resize(3 * 8);
+    M1_vertices.resize(3 * 8);
 
-    M1_vertices= {0,0,0,  0,0,1, // Vertex array:
-                0,1,1,  0,1,0, // x y z for
-                1,0,0,  1,0,1, // 8 different vertices
-                1,1,1,  1,1,0};
+    M1_vertices = {0, 0, 0, 0, 0, 1, // Vertex array:
+                   0, 1, 1, 0, 1, 0, // x y z for
+                   1, 0, 0, 1, 0, 1, // 8 different vertices
+                   1, 1, 1, 1, 1, 0};
 // Resizes the indices array. Repalce the values with the correct number of
 // indices (3 * number of triangles)
-M1_indices.resize(3*12);
+    M1_indices.resize(3 * 12);
 
 
-
-    M1_indices={0,1,2, 2,3,0,
-                0,3,4, 4,3,7,   // 36 indices
-            5,6,7, 7,4,5,   // to the vertices of
-            1,6,5, 1,2,6,   // 12 triangles composing
-            7,6,2, 3,2,7,   // 6 faces of a cube
-            4,5,0, 1,0,5};
+    M1_indices = {0, 1, 2, 2, 3, 0,
+                  0, 3, 4, 4, 3, 7,   // 36 indices
+                  5, 6, 7, 7, 4, 5,   // to the vertices of
+                  1, 6, 5, 1, 2, 6,   // 12 triangles composing
+                  7, 6, 2, 3, 2, 7,   // 6 faces of a cube
+                  4, 5, 0, 1, 0, 5};
 
 
 
@@ -191,19 +257,16 @@ M1_indices.resize(3*12);
 
 //// M2 : Cylinder
 
-    Cylinder(0.0,0.0,-3.0,33,1,1,M2_vertices,M2_indices,true,true);
+    Cylinder(0.0, 0.0, -3.0, 33, 1, 1, M2_vertices, M2_indices, true, true);
 
 
 //// M3 : Sphere
 
-    Sphere(10,10,2,M3_vertices,M3_indices);
+    Sphere(10, 10, 2, M3_vertices, M3_indices);
 
 
 
 //// M4 : Spring
 // Replace the code below, that creates a simple octahedron, with the one to create a spring.
-for(int i=0;i<10;i++) {
-    Cylinder(-i, i, -i*3, 33, 1, 1, M4_vertices, M4_indices, true, false);
-}
-
+    Spring(M4_vertices, M4_indices);
 }
