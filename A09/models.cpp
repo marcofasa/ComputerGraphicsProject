@@ -162,15 +162,15 @@ void Sphere(int stackCount,int sectorCount,float radius,std::vector<float>& vert
 }
 
 void Spring(std::vector<float>& vertices,std::vector<uint32_t>& indices){
-   float radius=1.5;
-    int sectorCount=30,stackCount=10,NSlices=10;
+   float radius=3;
+    int sectorCount=30,stackCount=15,NSlices=20;
    int con=0;
     float x, y, z,x1, y1, z1;                              // vertex position
     float stackStep = 2 * M_PI / stackCount;
-    int R=1;
-    float k=1;
+    float R=2;
+    float k=0.4;
     float stackAngle;
-    int round=2;
+    int round=5;
     int a = 0, b = 1, c = 2, d = 3;
 
     //VERTEX definition (SPACE NEEDED -> ((sectorCount+1)*(stackCount+1))*3) )
@@ -182,7 +182,7 @@ void Spring(std::vector<float>& vertices,std::vector<uint32_t>& indices){
             vertices.push_back(x);
             vertices.push_back(y);
             vertices.push_back(z);
-        printf(" vertex %d -- %f,%f,%f \n",con,x,y,z);
+      //  printf(" vertex %d -- %f,%f,%f \n",con,x,y,z);
         con=con+1;
 
 
@@ -194,7 +194,7 @@ void Spring(std::vector<float>& vertices,std::vector<uint32_t>& indices){
         vertices.push_back(x1);
         vertices.push_back(y1);
         vertices.push_back(z1);
-        printf(" vertex %d -- %f,%f,%f \n",con,x1,y1,z1);
+       // printf(" vertex %d -- %f,%f,%f \n",con,x1,y1,z1);
         con=con+1;
 
 
@@ -207,15 +207,15 @@ void Spring(std::vector<float>& vertices,std::vector<uint32_t>& indices){
 
             //Bottom Vertexes
             vertices.push_back(x1);
-            vertices.push_back(y1  + radius * cos((float) (i * 2.0 * M_PI / NSlices)));
-            vertices.push_back(z1 + radius * sin((float) (i * 2.0 * M_PI / NSlices)));
+            vertices.push_back(y1  + radius * cos((float) ((i+1) * 2.0 * M_PI / NSlices)));
+            vertices.push_back(z1 + radius * sin((float) ((i+1) * 2.0 * M_PI / NSlices)));
 
             con=con+2;
         }
 
         //a =  (NSlices+1)*2*m+0; b = (NSlices+1)*2*m+1; c =(NSlices+1)*2*m+ 2; d =(NSlices+1)*2*m + 3;
          a =  2; b = 3; c =4; d = 5;
-        printf(" indices %d,%d,%d,%d at %d  \n",a,b,c,d,m);
+       // printf(" indices %d,%d,%d,%d at %d  \n",a,b,c,d,m);
 
         // Indices definition ( SPACE NEEDED -> 12* NSlices )
         for (int i = 0; i < NSlices; i++) {
@@ -229,7 +229,7 @@ void Spring(std::vector<float>& vertices,std::vector<uint32_t>& indices){
             indices.push_back (c +(NSlices+1)*2*m);
             indices.push_back (d +(NSlices+1)*2*m);
 
-            printf(" indices %d,%d,%d,%d  \n",a,b,c,d);
+           // printf(" indices %d,%d,%d,%d  \n",a,b,c,d);
 
 
             a = a + 2;
@@ -237,9 +237,9 @@ void Spring(std::vector<float>& vertices,std::vector<uint32_t>& indices){
             c = (c%((NSlices)*2)) + 2;
             d = ((d)%((NSlices)*2)) + 2;
         }
-        printf(" indices %d,%d,%d,%d at %d  \n",a,b,c,d,m);
+       // printf(" indices %d,%d,%d,%d at %d  \n",a,b,c,d,m);
 
-        printf(" -------- \n");
+     //   printf(" -------- \n");
 
 
 
