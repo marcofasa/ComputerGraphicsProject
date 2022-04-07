@@ -194,7 +194,7 @@ void Spring(std::vector<float>& vertices,std::vector<uint32_t>& indices){
         vertices.push_back(x1);
         vertices.push_back(y1);
         vertices.push_back(z1);
-        printf(" vertex %d -- %f,%f,%f \n",con,x,y,z);
+        printf(" vertex %d -- %f,%f,%f \n",con,x1,y1,z1);
         con=con+1;
 
 
@@ -212,28 +212,36 @@ void Spring(std::vector<float>& vertices,std::vector<uint32_t>& indices){
 
             con=con+2;
         }
-       // a =  (NSlices+1)*2*m+0; b = (NSlices+1)*2*m+1; c =(NSlices+1)*2*m+ 2; d =(NSlices+1)*2*m + 3;
-        // a =  0; b = 1; c =2; d = 3;
+
+        //a =  (NSlices+1)*2*m+0; b = (NSlices+1)*2*m+1; c =(NSlices+1)*2*m+ 2; d =(NSlices+1)*2*m + 3;
+         a =  2; b = 3; c =4; d = 5;
+        printf(" indices %d,%d,%d,%d at %d  \n",a,b,c,d,m);
 
         // Indices definition ( SPACE NEEDED -> 12* NSlices )
         for (int i = 0; i < NSlices; i++) {
 
 
             //BODY
-            indices.push_back ((a) +2);
-            indices.push_back ((b) +2);
-            indices.push_back ((d) +2);
-            indices.push_back ((a) +2 );
-            indices.push_back ((c) +2);
-            indices.push_back ((d) +2);
+            indices.push_back (a + (NSlices+1)*2*m);
+            indices.push_back (b+ (NSlices+1)*2*m);
+            indices.push_back (d + (NSlices+1)*2*m);
+            indices.push_back (a+ (NSlices+1)*2*m);
+            indices.push_back (c +(NSlices+1)*2*m);
+            indices.push_back (d +(NSlices+1)*2*m);
 
+            printf(" indices %d,%d,%d,%d  \n",a,b,c,d);
 
 
             a = a + 2;
-            b = b + 2;
-            c = c + 2;
-            d = d + 2;
+            b = b+ 2;
+            c = (c%((NSlices)*2)) + 2;
+            d = ((d)%((NSlices)*2)) + 2;
         }
+        printf(" indices %d,%d,%d,%d at %d  \n",a,b,c,d,m);
+
+        printf(" -------- \n");
+
+
 
     }
 }
