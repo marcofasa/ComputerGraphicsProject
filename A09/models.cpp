@@ -72,14 +72,14 @@ void Cylinder(float cx,float cy,float cz,int NSlices,float radius,float height,s
         //TOP
         if(closed){
         indices.push_back (0);
-        indices.push_back ((a% ((NSlices)*2)) +2);
+        indices.push_back ((a) +2);
         indices.push_back ((c% ((NSlices)*2)) +2);}
 
         //BODY
-        indices.push_back ((a% ((NSlices)*2)) +2);
-        indices.push_back ((b% ((NSlices)*2)) +2);
+        indices.push_back ((a) +2);
+        indices.push_back ((b) +2);
         indices.push_back ((d% ((NSlices)*2)) +2);
-        indices.push_back ((a% ((NSlices)*2)) +2 );
+        indices.push_back ((a) +2 );
         indices.push_back ((c% ((NSlices)*2)) +2);
         indices.push_back ((d% ((NSlices)*2)) +2);
 
@@ -162,37 +162,40 @@ void Sphere(int stackCount,int sectorCount,float radius,std::vector<float>& vert
 }
 
 void Spring(std::vector<float>& vertices,std::vector<uint32_t>& indices){
-   float radius=1;
+   float radius=1.5;
     int sectorCount=30,stackCount=10,NSlices=10;
-
-    float x, y, z,x1, y1, z1, xy;                              // vertex position
-    float sectorStep = 2 * M_PI / sectorCount;
+   int con=0;
+    float x, y, z,x1, y1, z1;                              // vertex position
     float stackStep = 2 * M_PI / stackCount;
-
-    float sectorAngle, stackAngle;
-int j=0;
+    int R=1;
+    float k=1;
+    float stackAngle;
+    int round=2;
     int a = 0, b = 1, c = 2, d = 3;
 
     //VERTEX definition (SPACE NEEDED -> ((sectorCount+1)*(stackCount+1))*3) )
-    for(int m = 0; m <= stackCount; ++m) {
+    for(int m = 0; m <= round * stackCount; ++m) {
         stackAngle =  (m * stackStep);        // starting from pi/2 to -pi/2
-        z = radius * cosf(stackAngle);              // r * sin(u)
-        x = 10 * stackAngle;             // r * cos(u) * cos(v)
-        // y = radius * sinf(stackAngle);             // r * cos(u) * sin(v)
+        z = R * cosf(stackAngle);              // r * sin(u)
+        x = k * stackAngle;             // r * cos(u) * cos(v)
+         y = R* sinf(stackAngle);             // r * cos(u) * sin(v)
             vertices.push_back(x);
             vertices.push_back(y);
             vertices.push_back(z);
-            //printf("vertex \t %f %f %f \n", x,y,z);
+        printf(" vertex %d -- %f,%f,%f \n",con,x,y,z);
+        con=con+1;
 
-            j++;
-        stackAngle =  ((m+1) * stackStep);        // starting from pi/2 to -pi/2
-        z1 = radius * cosf(stackAngle);
-        x1 = 10 * (stackAngle) ;             // r * cos(u) * cos(v)
-        y1 = radius * sinf(stackAngle);             // r * cos(u) * sin(v)
-        vertices.push_back(x);
-        vertices.push_back(y);
-        vertices.push_back(z);
 
+
+        stackAngle =  ((m+1) * stackStep);        // 0 to 2 PI
+        z1 = R * cosf(stackAngle);
+        x1 = k * (stackAngle) ;             // r * cos(u) * cos(v)
+        y1 = R * sinf(stackAngle);             // r * cos(u) * sin(v)
+        vertices.push_back(x1);
+        vertices.push_back(y1);
+        vertices.push_back(z1);
+        printf(" vertex %d -- %f,%f,%f \n",con,x,y,z);
+        con=con+1;
 
 
         for (int i = 0; i < NSlices; i++) {
@@ -206,19 +209,24 @@ int j=0;
             vertices.push_back(x1);
             vertices.push_back(y1  + radius * cos((float) (i * 2.0 * M_PI / NSlices)));
             vertices.push_back(z1 + radius * sin((float) (i * 2.0 * M_PI / NSlices)));
+
+            con=con+2;
         }
+       // a =  (NSlices+1)*2*m+0; b = (NSlices+1)*2*m+1; c =(NSlices+1)*2*m+ 2; d =(NSlices+1)*2*m + 3;
+        // a =  0; b = 1; c =2; d = 3;
+
         // Indices definition ( SPACE NEEDED -> 12* NSlices )
         for (int i = 0; i < NSlices; i++) {
 
 
-
             //BODY
-            indices.push_back((a) + 2);
-            indices.push_back((b ) + 2);
-            indices.push_back((d) + 2);
-            indices.push_back((a ) + 2);
-            indices.push_back((c ) + 2);
-            indices.push_back((d ) + 2);
+            indices.push_back ((a) +2);
+            indices.push_back ((b) +2);
+            indices.push_back ((d) +2);
+            indices.push_back ((a) +2 );
+            indices.push_back ((c) +2);
+            indices.push_back ((d) +2);
+
 
 
             a = a + 2;
@@ -226,6 +234,7 @@ int j=0;
             c = c + 2;
             d = d + 2;
         }
+
     }
 }
 
