@@ -222,13 +222,13 @@ void Spring(std::vector<float>& vertices,std::vector<uint32_t>& indices){
         for (int i = 0; i < NSlices; i++) {
 
             //Top Vertex
-            vertices.push_back(x + radius * cos((float) (i * 2.0 * M_PI / NSlices)));
-            vertices.push_back(y);
+            vertices.push_back(x );
+            vertices.push_back(y + radius * cos((float) (i * 2.0 * M_PI / NSlices)));
             vertices.push_back(z + radius * sin((float) (i * 2.0 * M_PI / NSlices)));
 
             //Bottom Vertexes
-            vertices.push_back(x1 + radius * cos((float) ((i) * 2.0 * M_PI / NSlices)));
-            vertices.push_back(y1 );
+            vertices.push_back(x1 );
+            vertices.push_back(y1 + radius * cos((float) ((i) * 2.0 * M_PI / NSlices)));
             vertices.push_back(z1 + radius * sin((float) ((i) * 2.0 * M_PI / NSlices)));
 
             con=con+2;
