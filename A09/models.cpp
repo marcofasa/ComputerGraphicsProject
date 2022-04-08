@@ -69,6 +69,27 @@ void Cylinder(float cx,float cy,float cz,int NSlices,float radius,float height,s
     int a=0,b=1,c=2,d=3;
     for (int i=0;i<NSlices;i++){
 
+
+        /*
+
+
+          --    --                            --   --
+       --              --                --               --
+
+   --                      --        --                        --
+
+ --                           --    --                            --
+                 O                                 1
+  --              \            --   --              \             --
+                   \                                 \
+  18                \       3        20               \         5
+                     \                                 \
+     19               2                21               4
+
+
+
+         */
+
         //TOP
         if(closed){
         indices.push_back (0);
@@ -163,7 +184,7 @@ void Sphere(int stackCount,int sectorCount,float radius,std::vector<float>& vert
 
 void Spring(std::vector<float>& vertices,std::vector<uint32_t>& indices){
    float radius=3;
-    int sectorCount=30,stackCount=15,NSlices=20;
+    int sectorCount=30,stackCount=10,NSlices=100;
    int con=0;
     float x, y, z,x1, y1, z1;                              // vertex position
     float stackStep = 2 * M_PI / stackCount;
@@ -176,9 +197,9 @@ void Spring(std::vector<float>& vertices,std::vector<uint32_t>& indices){
     //VERTEX definition (SPACE NEEDED -> ((sectorCount+1)*(stackCount+1))*3) )
     for(int m = 0; m <= round * stackCount; ++m) {
         stackAngle =  (m * stackStep);        // starting from pi/2 to -pi/2
-        z = R * cosf(stackAngle);              // r * sin(u)
-        x = k * stackAngle;             // r * cos(u) * cos(v)
-         y = R* sinf(stackAngle);             // r * cos(u) * sin(v)
+        x = R * cosf(stackAngle);              // r * sin(u)
+        y = k * stackAngle;             // r * cos(u) * cos(v)
+         z = R* sinf(stackAngle);             // r * cos(u) * sin(v)
             vertices.push_back(x);
             vertices.push_back(y);
             vertices.push_back(z);
@@ -188,9 +209,9 @@ void Spring(std::vector<float>& vertices,std::vector<uint32_t>& indices){
 
 
         stackAngle =  ((m+1) * stackStep);        // 0 to 2 PI
-        z1 = R * cosf(stackAngle);
-        x1 = k * (stackAngle) ;             // r * cos(u) * cos(v)
-        y1 = R * sinf(stackAngle);             // r * cos(u) * sin(v)
+        x1 = R * cosf(stackAngle);
+        y1 = k * (stackAngle) ;             // r * cos(u) * cos(v)
+        z1 = R * sinf(stackAngle);             // r * cos(u) * sin(v)
         vertices.push_back(x1);
         vertices.push_back(y1);
         vertices.push_back(z1);
@@ -201,14 +222,14 @@ void Spring(std::vector<float>& vertices,std::vector<uint32_t>& indices){
         for (int i = 0; i < NSlices; i++) {
 
             //Top Vertex
-            vertices.push_back(x);
-            vertices.push_back(y+ radius * cos((float) (i * 2.0 * M_PI / NSlices)));
+            vertices.push_back(x + radius * cos((float) (i * 2.0 * M_PI / NSlices)));
+            vertices.push_back(y);
             vertices.push_back(z + radius * sin((float) (i * 2.0 * M_PI / NSlices)));
 
             //Bottom Vertexes
-            vertices.push_back(x1);
-            vertices.push_back(y1  + radius * cos((float) ((i+1) * 2.0 * M_PI / NSlices)));
-            vertices.push_back(z1 + radius * sin((float) ((i+1) * 2.0 * M_PI / NSlices)));
+            vertices.push_back(x1 + radius * cos((float) ((i) * 2.0 * M_PI / NSlices)));
+            vertices.push_back(y1 );
+            vertices.push_back(z1 + radius * sin((float) ((i) * 2.0 * M_PI / NSlices)));
 
             con=con+2;
         }
