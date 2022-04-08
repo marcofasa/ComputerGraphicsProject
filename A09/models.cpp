@@ -183,20 +183,20 @@ void Sphere(int stackCount,int sectorCount,float radius,std::vector<float>& vert
 }
 
 void Spring(std::vector<float>& vertices,std::vector<uint32_t>& indices){
-   float radius=3;
-    int sectorCount=30,stackCount=10,NSlices=100;
+   float radius=1.5;
+    int sectorCount=30,stackCount=10,NSlices=10;
    int con=0;
     float x, y, z,x1, y1, z1;                              // vertex position
-    float stackStep = 2 * M_PI / stackCount;
-    float R=2;
-    float k=0.4;
+    float stackStep =  M_PI / stackCount;
+    float R=5; //Radius of Spring
+    float k=1; //
     float stackAngle;
     int round=5;
     int a = 0, b = 1, c = 2, d = 3;
 
     //VERTEX definition (SPACE NEEDED -> ((sectorCount+1)*(stackCount+1))*3) )
-    for(int m = 0; m <= round * stackCount; ++m) {
-        stackAngle =  (m * stackStep);        // starting from pi/2 to -pi/2
+    for(int m = 0; m <= 2* stackCount; ++m) {
+        stackAngle = -M_PI/2 + (m * stackStep);        // starting from pi/2 to -pi/2
         x = R * cosf(stackAngle);              // r * sin(u)
         y = k * stackAngle;             // r * cos(u) * cos(v)
          z = R* sinf(stackAngle);             // r * cos(u) * sin(v)
@@ -208,7 +208,7 @@ void Spring(std::vector<float>& vertices,std::vector<uint32_t>& indices){
 
 
 
-        stackAngle =  ((m+1) * stackStep);        // 0 to 2 PI
+        stackAngle =  -M_PI/2 +((m+1) * stackStep);        // 0 to 2 PI
         x1 = R * cosf(stackAngle);
         y1 = k * (stackAngle) ;             // r * cos(u) * cos(v)
         z1 = R * sinf(stackAngle);             // r * cos(u) * sin(v)
