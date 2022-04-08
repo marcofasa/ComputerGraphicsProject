@@ -183,22 +183,23 @@ void Sphere(int stackCount,int sectorCount,float radius,std::vector<float>& vert
 }
 
 void Spring(std::vector<float>& vertices,std::vector<uint32_t>& indices){
-   float radius=1.5;
-    int sectorCount=30,stackCount=50,NSlices=10;
+   float pipeRadius=1.5; //Radius of pipe
+   int stackCount=50; //number of Cylinders per round
+   int NSlices=10; //slices of the pipe
    int con=0;
-    float x, y, z,x1, y1, z1;                              // vertex position
+    float x, y, z,x1, y1, z1;    // vertex position
     float stackStep =  M_PI / stackCount;
     float R=5; //Radius of Spring
-    float k=1; //
+    float K=1; // A circular helix of radius a and slope R/K (or pitch 2πb)
     float stackAngle;
-    int round=5;
-    int a = 0, b = 1, c = 2, d = 3;
+    int round=2;
+    int a , b, c, d;
 
-    //VERTEX definition (SPACE NEEDED -> ((sectorCount+1)*(stackCount+1))*3) )
-    for(int m = 0; m <=  stackCount; ++m) {
+    //VERTEX definition (SPACE NEEDED -> ( (round * 2 * stackCount + NSlices) * 6 +  )
+    for(int m = 0; m <=  round * 2 * stackCount; ++m) {
         stackAngle = -M_PI/2 + (m * stackStep);        // starting from pi/2 to -pi/2
         x = R * cosf(stackAngle);              // r * sin(u)
-        y = k * stackAngle;             // r * cos(u) * cos(v)
+        y = K * stackAngle;             // r * cos(u) * cos(v)
          z = R* sinf(stackAngle);             // r * cos(u) * sin(v)
             vertices.push_back(x);
             vertices.push_back(y);
@@ -210,7 +211,7 @@ void Spring(std::vector<float>& vertices,std::vector<uint32_t>& indices){
 
         stackAngle =  -M_PI/2 +((m+1) * stackStep);        // 0 to 2 PI
         x1 = R * cosf(stackAngle);
-        y1 = k * (stackAngle) ;             // r * cos(u) * cos(v)
+        y1 = K * (stackAngle) ;             // r * cos(u) * cos(v)
         z1 = R * sinf(stackAngle);             // r * cos(u) * sin(v)
         vertices.push_back(x1);
         vertices.push_back(y1);
@@ -223,15 +224,15 @@ void Spring(std::vector<float>& vertices,std::vector<uint32_t>& indices){
             stackAngle = -M_PI/2 + (m * stackStep);        // starting from pi/2 to -pi/2
 
             //Top Vertex
-            vertices.push_back(x +radius* sin((float) (i * 2.0 * M_PI / NSlices))*cos(stackAngle) );
-            vertices.push_back(y + radius * cos((float) (i * 2.0 * M_PI / NSlices)));
-            vertices.push_back(z + radius * sin((float) (i * 2.0 * M_PI / NSlices))*sin(stackAngle));
+            vertices.push_back(x +pipeRadius* sin((float) (i * 2.0 * M_PI / NSlices))*cos(stackAngle) );
+            vertices.push_back(y + pipeRadius * cos((float) (i * 2.0 * M_PI / NSlices)));
+            vertices.push_back(z + pipeRadius * sin((float) (i * 2.0 * M_PI / NSlices))*sin(stackAngle));
             stackAngle =  -M_PI/2 +((m+1) * stackStep);        // 0 to 2 PI
 
             //Bottom Vertexes
-            vertices.push_back(x1 +radius* sin((float) (i * 2.0 * M_PI / NSlices))*cos(stackAngle) );
-            vertices.push_back(y1 + radius * cos((float) (i * 2.0 * M_PI / NSlices)));
-            vertices.push_back(z1 + radius * sin((float) ((i) * 2.0 * M_PI / NSlices))*sin(stackAngle));
+            vertices.push_back(x1 +pipeRadius* sin((float) (i * 2.0 * M_PI / NSlices))*cos(stackAngle) );
+            vertices.push_back(y1 + pipeRadius * cos((float) (i * 2.0 * M_PI / NSlices)));
+            vertices.push_back(z1 + pipeRadius * sin((float) ((i) * 2.0 * M_PI / NSlices))*sin(stackAngle));
 
             con=con+2;
         }
