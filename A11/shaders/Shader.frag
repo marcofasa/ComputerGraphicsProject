@@ -8,10 +8,18 @@ layout(set = 0, binding = 1) uniform GlobalUniformBufferObject {
 
 float rand(float time){
 	return abs(sin(dot(time, 12.9898)));
+	/*
+	ORIGINAL
+	float rand(vec2 co){
+    return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453);
+	}
+	*/
 }
 
-int k=0;
 
 void main() {
-		outColor = vec4(gubo.time,abs(gubo.time-0.5), abs(0.5-gubo.time/2), 1.0f);
+	//To have relaxing aspect is better using linear/sin/cos
+	//functions to have a linearity in the change of colours
+	// Another way but more chaotic is to use the rand function above
+	outColor = vec4(gubo.time,abs(gubo.time-0.5), abs(0.5-gubo.time/2), 1.0f);
 }
