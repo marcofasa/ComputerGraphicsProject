@@ -6,8 +6,12 @@ layout(set = 0, binding = 1) uniform GlobalUniformBufferObject {
 	float time;
 } gubo;
 
+float rand(float time){
+	return abs(sin(dot(time, 12.9898)));
+}
+
+int k=0;
+
 void main() {
-
-	outColor = vec4(gubo.time,gubo.time/4, 0.5+gubo.time/2, 1.0f);
-
+		outColor = vec4(gubo.time,abs(gubo.time-1), abs(gubo.time), 1.0f);
 }
