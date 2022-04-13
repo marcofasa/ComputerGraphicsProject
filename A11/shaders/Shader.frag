@@ -13,5 +13,5 @@ float rand(float time){
 int k=0;
 
 void main() {
-		outColor = vec4(gubo.time,abs(gubo.time-1), abs(gubo.time), 1.0f);
+		outColor = vec4(gubo.time,abs(gubo.time-0.5), abs(0.5-gubo.time/2), 1.0f);
 }
