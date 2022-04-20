@@ -257,25 +257,29 @@ void Spring(float K,float R,float pipeRadius,int round,int stackCount,int NSlice
     }
 }
 
-void makeModels() {
-//// M1 : Cube
+void Cube (float size){
 
     M1_vertices.resize(3 * 8);
 
-    M1_vertices = {0, 0, 0, 0, 0, 1, // Vertex array:
-                   0, 1, 1, 0, 1, 0, // x y z for
-                   1, 0, 0, 1, 0, 1, // 8 different vertices
-                   1, 1, 1, 1, 1, 0};
+
+    M1_vertices = {0, 0, 0, 0, 0, size,      // Vertex array:
+                0, size, size, 0, size, 0,          // x y z for
+                          size, 0, 0, size, 0, size,   // 8 different vertices
+                          size, size, size, size, size, 0};
 
     M1_indices.resize(3 * 12);
-
-
-    M1_indices = {0, 1, 2, 2, 3, 0,
+    M1_indices ={0, 1, 2, 2, 3, 0,
                   0, 3, 4, 4, 3, 7,   // 36 indices
                   5, 6, 7, 7, 4, 5,   // to the vertices of
                   1, 6, 5, 1, 2, 6,   // 12 triangles composing
                   7, 6, 2, 3, 2, 7,   // 6 faces of a cube
                   4, 5, 0, 1, 0, 5};
+}
+
+void makeModels() {
+//// M1 : Cube
+
+    Cube(1);
 
 //// M2 : Cylinder
 
