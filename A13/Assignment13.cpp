@@ -294,7 +294,7 @@ private:
             std::set <uint32_t> uniqueQueueFamilies = {indices.graphicsFamily.value(), indices.presentFamily.value()};
 
             float queuePriority = 1.0f;
-            for (uint32_t queueFamily: uniqueQueueFamilies) {
+            for (uint32_t queueFamily: uniqueQueueFamilies)
                 VkDeviceQueueCreateInfo queueCreateInfo{};
                 queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
                 queueCreateInfo.queueFamilyIndex = queueFamily;
@@ -365,11 +365,11 @@ private:
                     std::cout << " Presentation";
                     indices.presentFamily = i;
                 }
+                std::cout << "\n";
 
                 if (indices.isComplete()) {
                     break;
                 }
-                std::cout << "\n";
 
                 i++;
             }
