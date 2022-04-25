@@ -136,6 +136,16 @@ private:
             throw std::runtime_error("failed to create instance!");
         }
 
+        //PRINTING ALL EXTENSIONS USED
+        uint32_t extensionCount = 0;
+        vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
+        std::vector<VkExtensionProperties> extensionBase(extensionCount);
+        vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensionBase.data());
+        std::cout << "available extensions:\n";
+
+        for (const auto& extension : extensionBase) {
+            std::cout << '\t' << extension.extensionName << '\n';
+        }
     }
 
     void createCommandPool() {
