@@ -275,6 +275,16 @@ private:
                 std::cout << " LazilyAllocated";
             std::cout << "\n";
         }
+        // Memory heaps
+        std::cout << "\n\tMemory Heaps: " << vpdmp.memoryHeapCount << "\n";
+        for(unsigned int i = 0; i < vpdmp.memoryHeapCount; i++ ) {
+            std::cout << "\t\tHeap : " << i;
+            VkMemoryHeap vmh = vpdmp.memoryHeaps[i];
+            std::cout << " size = " << std::hex << (unsigned long int)vmh.size;
+            if((vmh.flags & VK_MEMORY_HEAP_DEVICE_LOCAL_BIT) != 0)
+                std::cout << " DeviceLocal";
+            std::cout << "\n";
+        }
     }
 
         void createLogicalDevice() {
