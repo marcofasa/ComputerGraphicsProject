@@ -101,7 +101,7 @@ private:
         glfwDestroyWindow(window);
 
         glfwTerminate();
-        std::cout << "\tResources released correctly\n\n";
+        std::cout << "Resources released correctly!\n\n";
     }
 
     void createInstance() {
@@ -138,7 +138,7 @@ private:
         vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
         std::vector <VkExtensionProperties> extensionBase(extensionCount);
         vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensionBase.data());
-        std::cout << "available extensions:\n";
+        std::cout << "EXTENSIONS:\n";
 
         for (const auto &extension: extensionBase) {
             std::cout << '\t' << extension.extensionName << '\n';
@@ -146,7 +146,7 @@ private:
     }
 
     void createCommandPool() {
-        QueueFamilyIndices queueFamilyIndices = findQueueFamilies(physicalDevice);
+        QueueFamilyIndices queueFamilyIndices = findQueueFamilies(physicalDevice,false);
 
         VkCommandPoolCreateInfo poolInfo{};
         poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
@@ -218,6 +218,7 @@ private:
         // Show device properties
         VkPhysicalDeviceProperties deviceProperties;
         vkGetPhysicalDeviceProperties(physicalDevice, &deviceProperties);
+        std::cout <<    "\n SPECS: \n ";
 
         std::cout <<  "\tAPI version: 0x" << std::hex <<
                   deviceProperties.apiVersion << "\n";
@@ -288,7 +289,7 @@ private:
     }
 
         void createLogicalDevice() {
-            QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
+            QueueFamilyIndices indices = findQueueFamilies(physicalDevice,true);
 
             std::vector <VkDeviceQueueCreateInfo> queueCreateInfos;
             std::set <uint32_t> uniqueQueueFamilies = {indices.graphicsFamily.value(), indices.presentFamily.value()};
@@ -327,12 +328,19 @@ private:
         }
 
         bool isDeviceSuitable(VkPhysicalDevice device) {
-            QueueFamilyIndices indices = findQueueFamilies(device);
+            QueueFamilyIndices indices = findQueueFamilies(device,false);
 
             return indices.isComplete();
         }
 
-        QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device) {
+
+        /**
+         * If debug true prints the queue available for this device
+         * @param device
+         * @param debug
+         * @return
+         */
+        QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device,bool debug) {
             QueueFamilyIndices indices;
 
             uint32_t queueFamilyCount = 0;
@@ -340,38 +348,39 @@ private:
 
             std::vector <VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
             vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
-            std::cout << "\n\tQueue Families found: " << queueFamilyCount << "\n";
+            if (debug) std::cout << "\n\tQueue Families found: " << queueFamilyCount << "\n";
+
 
             int i = 0;
             for (const auto &queueFamily: queueFamilies) {
-                std::cout << "\t\tFam. " << i << ": queueCount = " <<
+              if(debug)  std::cout << "\t\tFam. " << i<< ": queueCount = " <<
                       queueFamily.queueCount << "; ";
 
+
                 if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
-                    indices.graphicsFamily = i;
+                    indices.graphicsFamily = i; //aQueueWithGraphicsCapability
                 }
                 if ((queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) != 0) {
-                    std::cout << " Graphics";
+                    if(debug)  std::cout << " Graphics";
                 }
                 if ((queueFamily.queueFlags & VK_QUEUE_COMPUTE_BIT) != 0)
-                    std::cout << " Compute";
+                    if(debug) std::cout << " Compute";
                 if ((queueFamily.queueFlags & VK_QUEUE_TRANSFER_BIT) != 0)
-                    std::cout << " Transfer";
+                    if(debug)  std::cout << " Transfer";
 
                 VkBool32 presentSupport = false;
                 vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &presentSupport);
 
                 if (presentSupport) {
-                    std::cout << " Presentation";
+                    if(debug)  std::cout << " Presentation";
                     indices.presentFamily = i;
                 }
-                std::cout << "\n";
+                if(debug)   std::cout << "\n";
 
-                if (indices.isComplete()) {
-                    break;
-                }
+
 
                 i++;
+
             }
 
             return indices;
