@@ -1,8 +1,3 @@
-// Following the Vulkan Tutorial until the
-// Drawing a triangle -> Setup -> Instance
-// section (currently at https://vulkan-tutorial.com/Drawing_a_triangle/Setup/Instance)
-// create a 640 x 480 window, with title "Assignment 12", and list the global
-// extensions supported by your O.S.
 
 /*
 1. Create a Window with GLFW. OK (50)
@@ -44,7 +39,7 @@ struct QueueFamilyIndices {
     }
 };
 
-class Assignment12 {
+class Assignment13 {
 public:
     void run() {
         initWindow();
@@ -127,9 +122,9 @@ private:
         createInfo.ppEnabledExtensionNames = extensions.data();
 
         VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
-            createInfo.enabledLayerCount = 0;
+        createInfo.enabledLayerCount = 0;
 
-            createInfo.pNext = nullptr;
+        createInfo.pNext = nullptr;
 
 
         if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS) {
@@ -240,7 +235,7 @@ private:
 
         createInfo.enabledExtensionCount = 0;
 
-            createInfo.enabledLayerCount = 0;
+        createInfo.enabledLayerCount = 0;
 
 
         if (vkCreateDevice(physicalDevice, &createInfo, nullptr, &device) != VK_SUCCESS) {
@@ -310,7 +305,7 @@ private:
 };
 
 int main() {
-    Assignment12 app;
+    Assignment13 app;
 
     try {
         app.run();
