@@ -60,7 +60,7 @@ struct SwapChainSupportDetails {
     std::vector<VkPresentModeKHR> presentModes;
 };
 
-class HelloTriangleApplication {
+class Assignment14 {
 public:
     void run() {
         initWindow();
@@ -135,6 +135,8 @@ private:
         glfwDestroyWindow(window);
 
         glfwTerminate();
+        std::cout << "Resources released correctly!\n\n";
+
     }
 
     void createInstance() {
@@ -323,7 +325,7 @@ private:
     }
 
     void createLogicalDevice() {
-        QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
+        QueueFamilyIndices indices = findQueueFamilies(physicalDevice,true);
 
         std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
         std::set<uint32_t> uniqueQueueFamilies = {indices.graphicsFamily.value(), indices.presentFamily.value()};
@@ -413,7 +415,7 @@ private:
         createInfo.imageArrayLayers = 1;
         createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
-        QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
+        QueueFamilyIndices indices = findQueueFamilies(physicalDevice,false);
         uint32_t queueFamilyIndices[] = {indices.graphicsFamily.value(), indices.presentFamily.value()};
 
         if (indices.graphicsFamily != indices.presentFamily) {
@@ -466,6 +468,7 @@ private:
             if (vkCreateImageView(device, &createInfo, nullptr, &swapChainImageViews[i]) != VK_SUCCESS) {
                 throw std::runtime_error("failed to create image views!");
             }
+            std::cout << "\tImages and Views retrieved\n";
         }
     }
 
@@ -509,6 +512,7 @@ private:
     }
 
     SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device) {
+        std::cout << "\tTrying to create the Swap Chain\n";
 
         SwapChainSupportDetails details;
 
@@ -535,8 +539,6 @@ private:
                           ", Color Space:" << details.formats[i].colorSpace <<"\n";
             }
         }
-        std::cout << "[see: <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkFormat.html> for Formats]\n";
-        std::cout << "[see: <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkColorSpaceKHR.html> for Color Spaces]\n";
         std::cout << "\n";
 
         uint32_t presentModeCount;
@@ -571,7 +573,7 @@ private:
     }
 
     bool isDeviceSuitable(VkPhysicalDevice device) {
-        QueueFamilyIndices indices = findQueueFamilies(device);
+        QueueFamilyIndices indices = findQueueFamilies(device,false);
 
         bool extensionsSupported = checkDeviceExtensionSupport(device);
 
@@ -600,9 +602,8 @@ private:
         return requiredExtensions.empty();
     }
 
-    QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device) {
+    QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device,bool debug) {
         QueueFamilyIndices indices;
-        bool debug=true;
         uint32_t queueFamilyCount = 0;
         vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
 
@@ -682,14 +683,14 @@ private:
     }
 
     static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData) {
-        std::cerr << "validation layer: " << pCallbackData->pMessage << std::endl;
+        //std::cerr << "validation layer: " << pCallbackData->pMessage << std::endl;
 
         return VK_FALSE;
     }
 };
 
 int main() {
-    HelloTriangleApplication app;
+    Assignment14 app;
 
     try {
         app.run();
