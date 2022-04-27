@@ -17,6 +17,8 @@
 #include <optional>
 #include <set>
 
+
+
 const uint32_t WIDTH = 640;
 const uint32_t HEIGHT = 480;
 
@@ -108,7 +110,7 @@ private:
         createSurface();
         pickPhysicalDevice();
         createLogicalDevice();
-        createSwapChain();//NEW
+       createSwapChain();//NEW
         createImageViews();//NEW
         createCommandPool();
         createCommandBuffer();
@@ -165,12 +167,17 @@ private:
     }
 
     void cleanup(){
+        /*
+         *  NEW Added logic to clean up
+         */
     for (auto imageView : swapChainImageViews) {
         vkDestroyImageView(device, imageView, nullptr);
     }
 
     vkDestroySwapchainKHR(device, swapChain, nullptr);
     vkDestroyDevice(device, nullptr);
+
+
 
         vkDestroyCommandPool(device, commandPool, nullptr);
 
@@ -210,18 +217,6 @@ private:
         }
 
         std::cout << "\t \nCommand Pool and Command Buffers created\n";
-    }
-
-    void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT &createInfo) {
-        createInfo = {};
-        createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
-        createInfo.messageSeverity =
-                VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
-                VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
-        createInfo.messageType =
-                VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
-                VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
-        createInfo.pfnUserCallback = debugCallback;
     }
 
 
@@ -331,6 +326,7 @@ private:
 
     void createLogicalDevice() {
         QueueFamilyIndices indices = findQueueFamilies(physicalDevice,true);
+        std::cout << "AAAAAA";
 
         std::vector <VkDeviceQueueCreateInfo> queueCreateInfos;
         std::set <uint32_t> uniqueQueueFamilies = {indices.graphicsFamily.value(), indices.presentFamily.value()};
@@ -370,6 +366,7 @@ private:
 
 
     void createSwapChain() {
+
         SwapChainSupportDetails swapChainSupport = querySwapChainSupport(physicalDevice);
 
         VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
@@ -393,6 +390,8 @@ private:
         createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
         QueueFamilyIndices indices = findQueueFamilies(physicalDevice,false);
+        std::cout << "AAAAAA";
+
         uint32_t queueFamilyIndices[] = {indices.graphicsFamily.value(), indices.presentFamily.value()};
 
         if (indices.graphicsFamily != indices.presentFamily) {
@@ -412,6 +411,9 @@ private:
 
         if (vkCreateSwapchainKHR(device, &createInfo, nullptr, &swapChain) != VK_SUCCESS) {
             throw std::runtime_error("failed to create swap chain!");
+        }
+        else{
+            std::cout << "!swap chain created!";
         }
 
         vkGetSwapchainImagesKHR(device, swapChain, &imageCount, nullptr);
@@ -587,13 +589,10 @@ private:
                 indices.presentFamily = i;
             }
             if(debug)   std::cout << "\n";
-
-
-
             i++;
+            //std::cout << "AAAAAA \n";
 
         }
-
         return indices;
     }
 
