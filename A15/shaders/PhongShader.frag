@@ -49,16 +49,16 @@ vec3 direct_light_color(vec3 pos) {
 }
 
 vec3 point_light_dir(vec3 pos) {
-	vec3 dif=vec3(normalize(gubo.lightPos-pos));
+	vec3 dif=normalize(gubo.lightPos-pos);
 	// Point light direction
 	return dif;
 }
 
 vec3 point_light_color(vec3 pos) {
 	// Point light color
-	vec3 x = vec3(gubo.coneInOutDecayExp.z/abs(gubo.lightPos-pos));
-	x=gubo.lightColor*pow(x, vec3(gubo.coneInOutDecayExp.w,gubo.coneInOutDecayExp.w,gubo.coneInOutDecayExp.w));
-	return x;
+	vec3 spot =gubo.lightPos-pos;
+	//return pow(gubo.coneInOutDecayExp.z/abs(a), vec3(gubo.coneInOutDecayExp.w,gubo.coneInOutDecayExp.w,gubo.coneInOutDecayExp.w));
+	return gubo.lightColor*pow(gubo.coneInOutDecayExp.z/length(spot),gubo.coneInOutDecayExp.w);
 }
 
 vec3 spot_light_dir(vec3 pos) {
@@ -69,12 +69,10 @@ vec3 spot_light_dir(vec3 pos) {
 
 vec3 spot_light_color(vec3 pos) {
 	// Spot light color
-	vec3 dif=vec3(normalize(gubo.lightPos-pos));
-	vec3 x = vec3(gubo.coneInOutDecayExp.z/abs(gubo.lightPos-pos));
-	x=gubo.lightColor*pow(x, vec3(gubo.coneInOutDecayExp.w, gubo.coneInOutDecayExp.w, gubo.coneInOutDecayExp.w));
-	vec3 y=((dif*gubo.lightDir-gubo.coneInOutDecayExp.x)/(gubo.coneInOutDecayExp.y-gubo.coneInOutDecayExp.x));
-	//return x*clamp(y,min(y) , max(y));
-	return vec3(1.0f,1.0f,1.0f);
+	vec3 spotDir=vec3(normalize(gubo.lightPos-pos));
+	float CosAngle = dot(spotDir,gubo.lightDir);
+	return gubo.lightColor * pow(gubo.coneInOutDecayExp.z / length(gubo.lightPos-pos),gubo.coneInOutDecayExp.w ) *
+	clamp((CosAngle - gubo.coneInOutDecayExp.x) / (gubo.coneInOutDecayExp.y-gubo.coneInOutDecayExp.x), 0.0, 1.0);
 }
 
 /**** To from here *****/
