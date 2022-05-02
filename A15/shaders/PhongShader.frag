@@ -38,13 +38,11 @@ layout(binding = 2) uniform GlobalUniformBufferObject {
 
 /**** Modify from here *****/
 
-//dL
 vec3 direct_light_dir(vec3 pos) {
 	// Directional light direction (d)
 	return gubo.lightDir;
 }
 
-//lL
 vec3 direct_light_color(vec3 pos) {
 	// Directional light color (l)
 	return gubo.lightColor;
@@ -59,9 +57,8 @@ vec3 point_light_dir(vec3 pos) {
 vec3 point_light_color(vec3 pos) {
 	// Point light color
 	vec3 x = vec3(gubo.coneInOutDecayExp.z/abs(gubo.lightPos-pos));
-	//vec3 a= vec3(pow(gubo.coneInOutDecayExp.z/abs(gubo.lightPos-pos),gubo.coneInOutDecayExp.w));
-	//pow((vec3(1.0f, 1.0f, 1.0f)/abs(gubo.lightPos-pos)),gubo.coneInOutDecayExp)
-	return gubo.lightColor*vec3(pow(x, vec3(gubo.coneInOutDecayExp.w,gubo.coneInOutDecayExp.w,gubo.coneInOutDecayExp.w)));
+	x=gubo.lightColor*pow(x, vec3(gubo.coneInOutDecayExp.w,gubo.coneInOutDecayExp.w,gubo.coneInOutDecayExp.w));
+	return x;
 }
 
 vec3 spot_light_dir(vec3 pos) {
@@ -74,8 +71,10 @@ vec3 spot_light_color(vec3 pos) {
 	// Spot light color
 	vec3 dif=vec3(normalize(gubo.lightPos-pos));
 	vec3 x = vec3(gubo.coneInOutDecayExp.z/abs(gubo.lightPos-pos));
-	x= vec3(pow(x, vec3(gubo.coneInOutDecayExp.w,gubo.coneInOutDecayExp.w,gubo.coneInOutDecayExp.w)));
-	return gubo.lightColor*x*clamp((dif*gubo.lightDir-gubo.coneInOutDecayExp.x)/(gubo.coneInOutDecayExp.y-gubo.coneInOutDecayExp.x),0.0f,1.0f);
+	x=gubo.lightColor*pow(x, vec3(gubo.coneInOutDecayExp.w, gubo.coneInOutDecayExp.w, gubo.coneInOutDecayExp.w));
+	vec3 y=((dif*gubo.lightDir-gubo.coneInOutDecayExp.x)/(gubo.coneInOutDecayExp.y-gubo.coneInOutDecayExp.x));
+	//return x*clamp(y,min(y) , max(y));
+	return vec3(1.0f,1.0f,1.0f);
 }
 
 /**** To from here *****/
