@@ -54,11 +54,10 @@ vec3 point_light_dir(vec3 pos) {
 	return dif;
 }
 
+//TODO is part 3 correct?
 vec3 point_light_color(vec3 pos) {
 	// Point light color
-	vec3 spot =gubo.lightPos-pos;
-	//return pow(gubo.coneInOutDecayExp.z/abs(a), vec3(gubo.coneInOutDecayExp.w,gubo.coneInOutDecayExp.w,gubo.coneInOutDecayExp.w));
-	return gubo.lightColor*pow(gubo.coneInOutDecayExp.z/length(spot),gubo.coneInOutDecayExp.w);
+	return gubo.lightColor * pow(gubo.coneInOutDecayExp.z / length(gubo.lightPos-pos),gubo.coneInOutDecayExp.w);
 }
 
 vec3 spot_light_dir(vec3 pos) {
