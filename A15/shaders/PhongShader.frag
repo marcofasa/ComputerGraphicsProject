@@ -1,6 +1,21 @@
 #version 450
 #extension GL_ARB_separate_shader_objects : enable
-
+/*
+gubo.lightDir->a vec3 containing the direction of the light (for spot and directional lights).  --> d
+• gubo.lightPos->a vec3 containing the position of the light (for spot and point lights). --> p
+• gubo.lightColor->avec3containingthebasiccolorofthelight. --> l
+• gubo.coneInOutDecayExp.x->a float component containing the cosine of the outer
+angle of a spot light. --> cos_outer
+• gubo.coneInOutDecayExp.y->a float component containing the cosine of the inner
+angle of a spot light. --> cos_inner
+• gubo.coneInOutDecayExp.z->a float component containing the basic distance g for
+both spot and point lights. --> g
+• gubo.coneInOutDecayExp.w->a float component containing the denominator
+exponent b for both spot and point lights: 0 for no decay, 1 for linear decay and 2 for quadratic
+fading.
+• Object gubo also contains fields eyePos and selector, which however are not meaningful for the exercise and
+are required for other parts of the shader already implemented.
+*/
 layout(location = 0) in vec3 fragPos;
 layout(location = 1) in vec3 fragNorm;
 layout(location = 2) in vec2 fragTexCoord;
@@ -10,9 +25,9 @@ layout(location = 0) out vec4 outColor;
 layout(binding = 1) uniform sampler2D texSampler;
 
 layout(binding = 2) uniform GlobalUniformBufferObject {
-	vec3 lightDir;
-	vec3 lightPos;
-	vec3 lightColor;
+	vec3 lightDir; //d
+	vec3 lightPos; //p
+	vec3 lightColor; //l
 	vec3 eyePos;
 	vec4 coneInOutDecayExp;
 	vec4 selector;
@@ -23,34 +38,44 @@ layout(binding = 2) uniform GlobalUniformBufferObject {
 
 /**** Modify from here *****/
 
+//dL
 vec3 direct_light_dir(vec3 pos) {
-	// Directional light direction
+	// Directional light direction (d)
 	return gubo.lightDir;
 }
 
+//lL
 vec3 direct_light_color(vec3 pos) {
-	// Directional light color
-	return vec3(1.0f, 1.0f, 1.0f);
+	// Directional light color (l)
+	return gubo.lightColor;
 }
 
 vec3 point_light_dir(vec3 pos) {
+	vec3 dif=vec3(normalize(gubo.lightPos-pos));
 	// Point light direction
-	return vec3(0.0f, 0.0f, 1.0f);
+	return dif;
 }
 
 vec3 point_light_color(vec3 pos) {
 	// Point light color
-	return vec3(0.5f, 1.0f, 0.5f);
+	vec3 x = vec3(gubo.coneInOutDecayExp.z/abs(gubo.lightPos-pos));
+	//vec3 a= vec3(pow(gubo.coneInOutDecayExp.z/abs(gubo.lightPos-pos),gubo.coneInOutDecayExp.w));
+	//pow((vec3(1.0f, 1.0f, 1.0f)/abs(gubo.lightPos-pos)),gubo.coneInOutDecayExp)
+	return gubo.lightColor*vec3(pow(x, vec3(gubo.coneInOutDecayExp.w,gubo.coneInOutDecayExp.w,gubo.coneInOutDecayExp.w)));
 }
 
 vec3 spot_light_dir(vec3 pos) {
 	// Spot light direction
-	return vec3(0.0f, 0.0f, 1.0f);
+	vec3 dif=vec3(normalize(gubo.lightPos-pos));
+	return dif;
 }
 
 vec3 spot_light_color(vec3 pos) {
 	// Spot light color
-	return vec3(0.5f, 1.0f, 0.5f);
+	vec3 dif=vec3(normalize(gubo.lightPos-pos));
+	vec3 x = vec3(gubo.coneInOutDecayExp.z/abs(gubo.lightPos-pos));
+	x= vec3(pow(x, vec3(gubo.coneInOutDecayExp.w,gubo.coneInOutDecayExp.w,gubo.coneInOutDecayExp.w)));
+	return gubo.lightColor*x*clamp((dif*gubo.lightDir-gubo.coneInOutDecayExp.x)/(gubo.coneInOutDecayExp.y-gubo.coneInOutDecayExp.x),0.0f,1.0f);
 }
 
 /**** To from here *****/
