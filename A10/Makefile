@@ -3,7 +3,7 @@ INC=-I./headers
 GLSLC_PATH = /Users/fasa/VulkanSDK/1.3.204.0/macOS/bin
 SHADER_FOLDER = ./shaders
 LDFLAGS = -lglfw -lvulkan -ldl -lpthread
-.PHONY: A10 run clean
+.PHONY: shader A10 run clean
 A10: Assignment10.cpp
 	if [ -a A10 ]; then rm A10; fi;
 	g++ $(CFLAGS) $(INC) -o A10 Assignment10.cpp $(LDFLAGS)
