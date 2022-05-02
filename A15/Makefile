@@ -16,7 +16,4 @@ clean:
 	rm -f A15
 
 shader:
-	$(GLSLC_PATH)/glslc $(SHADER_FOLDER)/PBRShader.frag -o $(SHADER_FOLDER)/PBRFrag.spv
-	$(GLSLC_PATH)/glslc $(SHADER_FOLDER)/PBRShader.vert -o $(SHADER_FOLDER)/PBRVert.spv
-	$(GLSLC_PATH)/glslc $(SHADER_FOLDER)/SkyBoxShader.frag -o $(SHADER_FOLDER)/SkyBoxFrag.spv
-	$(GLSLC_PATH)/glslc $(SHADER_FOLDER)/SkyBoxShader.vert -o $(SHADER_FOLDER)/SkyBoxVert.spv
+	$(GLSLC_PATH)/glslc $(SHADER_FOLDER)/PhongShader.frag -o $(SHADER_FOLDER)/PhongVert.spv
