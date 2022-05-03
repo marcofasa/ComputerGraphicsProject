@@ -54,7 +54,7 @@ vec3 point_light_dir(vec3 pos) {
 	return dif;
 }
 
-//TODO is part 3 correct?
+//TODO is part 3 correct?  --> MODIFIED line 3100
 vec3 point_light_color(vec3 pos) {
 	// Point light color
 	return gubo.lightColor * pow(gubo.coneInOutDecayExp.z / length(gubo.lightPos-pos),gubo.coneInOutDecayExp.w);
