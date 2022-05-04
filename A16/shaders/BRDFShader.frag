@@ -84,9 +84,14 @@ vec3 Toon_Diffuse_BRDF(vec3 L, vec3 N, vec3 V, vec3 C, vec3 Cd, float thr) {
 	// float thr : color threshold
 
 	float LdotN = max(0.0, dot(N, L));
-
+	vec3 diffuseToon = vec3(0,0,0);
+	if (LdotN<thr){
+		 diffuseToon =  Cd ;
+	}
+	else{
+		diffuseToon = C ;
+	}
 	//??
-	vec3 diffuseToon = max(sign(LdotN- thr),0.0) * C ;
 	return diffuseToon;
 }
 
