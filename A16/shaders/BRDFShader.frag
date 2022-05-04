@@ -33,8 +33,7 @@ vec3 Lambert_Diffuse_BRDF(vec3 L, vec3 N, vec3 V, vec3 C) {
 	// vec3 V : view direction
 	// vec3 C : main color (diffuse color, or specular color)
 	float LdotN = max(0.0, dot(N, L));
-	vec3 LDcol = gubo.lightColor0  * C;
-	vec3 diffuseLambert = LDcol * LdotN;
+	vec3 diffuseLambert = C * LdotN;
 
 
 	return diffuseLambert;
@@ -45,8 +44,7 @@ vec3 Oren_Nayar_Diffuse_BRDF(vec3 L, vec3 N, vec3 V, vec3 C, float sigma) {
 	// additional parameter:
 	// float sigma : roughness of the material
 	float LdotN = max(0.0, dot(N, L));
-	vec3 LDcol = gubo.lightColor0  * C;
-	vec3 diffuseLambert = LDcol * LdotN;
+	vec3 diffuseLambert = C * LdotN;
 	float VdotN = max(0.0, dot(N, V));
 	float theta_i = acos(LdotN);
 	float theta_r = acos(VdotN);
@@ -72,7 +70,7 @@ vec3 Phong_Specular_BRDF(vec3 L, vec3 N, vec3 V, vec3 C, float gamma)  {
 	vec3 reflection = -reflect(L, N);
 	float LdotR = max(dot(reflection, V), 0.0);
 
-	vec3 LScol = gubo.lightColor0 * C * max(sign(LdotN),0.0);
+	vec3 LScol = C * max(sign(LdotN),0.0);
 
 	vec3 specularPhong = LScol * pow(LdotR, gamma);
 
@@ -84,9 +82,9 @@ vec3 Toon_Diffuse_BRDF(vec3 L, vec3 N, vec3 V, vec3 C, vec3 Cd, float thr) {
 	// additional parameters:
 	// vec3 Cd : color to be used in dark areas
 	// float thr : color threshold
+
 	float LdotN = max(0.0, dot(N, L));
-	vec3 LDcol = gubo.lightColor2  * C;
-	vec3 diffuseToon = max(sign(LdotN- thr),0.0) * LDcol;
+	vec3 diffuseToon = max(sign(LdotN- thr),0.0) * Cd * C;
 	return diffuseToon;
 }
 
@@ -106,11 +104,13 @@ vec3 Toon_Specular_BRDF(vec3 L, vec3 N, vec3 V, vec3 C, float thr)  {
 	float LdotN = max(0.0, dot(N, L));
 	vec3 reflection = -reflect(L, N);
 	float LdotR = max(dot(reflection, V), 0.0);
+	vec3 halfVec = normalize(L + V);
+	float HdotN = max(dot(N, halfVec), 0.0);
+	vec3 LScol = C * max(sign(LdotN),0.0);
 
-	vec3 LScol = gubo.lightColor1 * C * max(sign(LdotN),0.0);
-
-	//
+	//specularToonP
 	vec3 specularToonP = max(sign(LdotR - thr), 0.0) * LScol;
+	//vec3 specularToonP = max(sign(HdotN - thr), 0.0) * LScol ;
 
 	return specularToonP;
 }
