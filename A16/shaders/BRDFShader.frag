@@ -67,11 +67,16 @@ vec3 Phong_Specular_BRDF(vec3 L, vec3 N, vec3 V, vec3 C, float gamma)  {
 	// additional parameter:
 	// float gamma : exponent of the cosine term
 
+	// Specular
+	float LdotN = max(0.0, dot(N, L));
+	vec3 reflection = -reflect(L, N);
+	float LdotR = max(dot(reflection, V), 0.0);
 
+	vec3 LScol = gubo.lightColor0 * C * max(sign(LdotN),0.0);
 
-	//vec3 specularPhong = LScol * pow(LdotR, gamma);
+	vec3 specularPhong = LScol * pow(LdotR, gamma);
 
-	return vec3(0,0,0);
+	return specularPhong;
 }
 
 vec3 Toon_Diffuse_BRDF(vec3 L, vec3 N, vec3 V, vec3 C, vec3 Cd, float thr) {
@@ -91,16 +96,18 @@ vec3 Toon_Specular_BRDF(vec3 L, vec3 N, vec3 V, vec3 C, float thr)  {
 	// float thr : color threshold
 
 	//calculating tangent and bitangent
+	/*
 	float tbf = max(0.0, sign(abs(N.y) - 0.707));
 	vec3 t = normalize(cross(N, vec3(1,0,0)));
 	vec3 b = normalize(cross(N, t));
+	*/
 
-	// Specular (maybe V = eyeDir)
+	// Specular
 	float LdotN = max(0.0, dot(N, L));
 	vec3 reflection = -reflect(L, N);
 	float LdotR = max(dot(reflection, V), 0.0);
 
-	vec3 LScol = gubo.lightColor2 * C * max(sign(LdotN),0.0);
+	vec3 LScol = gubo.lightColor1 * C * max(sign(LdotN),0.0);
 
 	//
 	vec3 specularToonP = max(sign(LdotR - thr), 0.0) * LScol;
