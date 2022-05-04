@@ -84,7 +84,9 @@ vec3 Toon_Diffuse_BRDF(vec3 L, vec3 N, vec3 V, vec3 C, vec3 Cd, float thr) {
 	// float thr : color threshold
 
 	float LdotN = max(0.0, dot(N, L));
-	vec3 diffuseToon = max(sign(LdotN- thr),0.0) * C * Cd ;
+
+	//??
+	vec3 diffuseToon = max(sign(LdotN- thr),0.0) * C ;
 	return diffuseToon;
 }
 
@@ -109,8 +111,7 @@ vec3 Toon_Specular_BRDF(vec3 L, vec3 N, vec3 V, vec3 C, float thr)  {
 	vec3 LScol = C * max(sign(LdotN),0.0);
 
 	//specularToonP
-	vec3 specularToonP = max(sign(LdotR - thr), 0.0) * LScol;
-	//vec3 specularToonP = max(sign(HdotN - thr), 0.0) * LScol ;
+	vec3 specularToonP = max(sign(LdotR - thr), 0.0) * LScol ;
 
 	return specularToonP;
 }
