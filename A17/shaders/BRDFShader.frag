@@ -45,8 +45,21 @@ vec3 Case1_Color(vec3 N, vec3 V, vec3 Cd, vec3 Ca, float sigma) {
 	// vec3 Cd : main color (diffuse color)
 	// vec3 Ca : ambient color
 	// float sigma : roughness of the material
-	
-	return gubo.AmbColor*Ca;
+	float LdotN = max(0.0, dot(N, gubo.lightDir0));
+	vec3 diffuseLambert = Cd * LdotN;
+	float VdotN = max(0.0, dot(N, V));
+	float theta_i = acos(LdotN);
+	float theta_r = acos(VdotN);
+	float alpha = max(theta_i, theta_r);
+	float beta = min(min(theta_i, theta_r), 1.57);
+	float A = 1.0 - 0.5 * sigma / (sigma + 0.33);
+	float B = 0.45 * sigma / (sigma + 0.09);
+	vec3 v_i = normalize(gubo.lightDir0 - N * LdotN);
+	vec3 v_r = normalize(V - N * VdotN);
+	float G = max(0.0, dot(v_i, v_r));
+	vec3 diffuseOrenNayar = diffuseLambert * (A + B * G * sin(alpha) * tan(beta));
+
+	return diffuseOrenNayar*Ca;
 }
 
 vec3 Case2_Color(vec3 N, vec3 V, vec3 Cd, vec3 Ca) {
@@ -61,9 +74,11 @@ vec3 Case2_Color(vec3 N, vec3 V, vec3 Cd, vec3 Ca) {
 	// vec3 V : view direction
 	// vec3 Cd : main color (diffuse color)
 	// vec3 Ca : ambient color
+	float LdotN = max(0.0, dot(N, gubo.lightDir0));
+	vec3 diffuseLambert = Cd * LdotN;
 	vec3 HemiDir = vec3(0.0f, 1.0f, 0.0f);
-	float amBlend = (dot(N, HemiDir) + 1.0) / 2.0;
-	vec3 ambientHemi = (gubo.lightColor0 * amBlend + Cd * (1.0 - amBlend)) * Ca;
+	float amBlend = (dot(N,HemiDir) + 1.0) / 2.0;
+	vec3 ambientHemi = (Ca* amBlend + Cd* (1.0 - amBlend)) *diffuseLambert;
 
 
 	
@@ -83,12 +98,20 @@ vec3 Case3_Color(vec3 N, vec3 V, vec3 Cs, vec3 Ca, float gamma)  {
 	// vec3 Ca : ambient color
 	// float gamma : Blinn exponent
 
+
+	float LdotN = max(0.0, dot(N, gubo.lightDir0));
+	vec3 halfVec = normalize(gubo.lightDir0 + V);
+	float HdotN = max(dot(N, halfVec), 0.0);
+	vec3 LScol = Cs * max(sign(LdotN),0.0);
+	vec3 specularBlinn = LScol * pow(HdotN, gamma);
+
+
 	//const mat4 McInv = mat4(vec4(0.25,0.0,-0.25,0.7071),vec4(0.25,0.6124,-0.25,-0.3536),vec4(0.25,-0.6124,-0.25,-0.3536),vec4(0.25,0.0,0.75,0.0));
 	 //mat4 McInv = mat4(vec4(gubo.lightDir0),vec4(gubo.lightDir1),vec4(gubo.lightDir2),vec4(gubo.lightDir3));
-	mat4 McInv = mat4(vec4(0.25,gubo.lightDir0),vec4(0.25,gubo.lightDir1),vec4(0.25,gubo.lightDir2),vec4(0.25,gubo.lightDir3));
-	mat4 InCols = transpose(mat4(vec4(0,gubo.lightColor0), vec4(0,gubo.lightColor0), vec4(0,gubo.lightColor0),vec4( 0,gubo.lightColor0)));
-	mat4 OutCols = McInv * InCols;
-	vec3 ambientSH = ((vec4(1,N) * OutCols).rgb, 1.0) * Ca;
+	mat3 McInv = mat3(gubo.lightDir1,gubo.lightDir2,gubo.lightDir3);
+	mat3 InCols = transpose(mat3(gubo.lightColor1,gubo.lightColor2, gubo.lightColor3));
+	mat3 OutCols = McInv * InCols;
+	vec3 ambientSH = ((vec3(1,N) * OutCols).rgb, 1.0) * Ca;
 	
 	return ambientSH;
 }
