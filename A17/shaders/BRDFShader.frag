@@ -45,8 +45,10 @@ vec3 Case1_Color(vec3 N, vec3 V, vec3 Cd, vec3 Ca, float sigma) {
 	// vec3 Cd : main color (diffuse color)
 	// vec3 Ca : ambient color
 	// float sigma : roughness of the material
+
 	float LdotN = max(0.0, dot(N, gubo.lightDir0));
 	vec3 diffuseLambert = Cd * LdotN;
+
 	float VdotN = max(0.0, dot(N, V));
 	float theta_i = acos(LdotN);
 	float theta_r = acos(VdotN);
@@ -59,7 +61,8 @@ vec3 Case1_Color(vec3 N, vec3 V, vec3 Cd, vec3 Ca, float sigma) {
 	float G = max(0.0, dot(v_i, v_r));
 	vec3 diffuseOrenNayar = diffuseLambert * (A + B * G * sin(alpha) * tan(beta));
 
-	return diffuseOrenNayar*Ca;
+      vec3 res=(diffuseOrenNayar)*(Ca);
+	return  res;
 }
 
 vec3 Case2_Color(vec3 N, vec3 V, vec3 Cd, vec3 Ca) {
@@ -74,11 +77,18 @@ vec3 Case2_Color(vec3 N, vec3 V, vec3 Cd, vec3 Ca) {
 	// vec3 V : view direction
 	// vec3 Cd : main color (diffuse color)
 	// vec3 Ca : ambient color
+   //gubo.AmbColor-> the bottom color
+	//gubo.TopColor-> the top ambient color
+	/*
+     float amBlend = (dot(normalVec, ADir) + 1.0) / 2.0;
+	vec4 ambientHemi = (ambientLightColor * amBlend + ambientLightLowColor * (1.0 - amBlend)) * ambColor;
+	*/
+
 	float LdotN = max(0.0, dot(N, gubo.lightDir0));
 	vec3 diffuseLambert = Cd * LdotN;
 	vec3 HemiDir = vec3(0.0f, 1.0f, 0.0f);
 	float amBlend = (dot(N,HemiDir) + 1.0) / 2.0;
-	vec3 ambientHemi = (Ca* amBlend + Cd* (1.0 - amBlend)) *diffuseLambert;
+	vec3 ambientHemi = (Ca* amBlend + gubo.AmbColor * (1.0 - amBlend)) *diffuseLambert*gubo.TopColor;
 
 
 	
@@ -97,7 +107,16 @@ vec3 Case3_Color(vec3 N, vec3 V, vec3 Cs, vec3 Ca, float gamma)  {
 	// vec3 Cs : specular color
 	// vec3 Ca : ambient color
 	// float gamma : Blinn exponent
+    //gubo.AmbColor->the constant component for Spherical Harmonics lighting
+	//gubo.TopColor-> difference related to the y component of the normal direction for Spherical Harmonics lighting
+	//gubo.DzColor,gubo.DxColor->two vec 3 containing the difference related to the z and x components of the normal direction for Spherical Harmonics lighting
 
+	/*
+	const mat4 McInv = mat4(vec4(0.25,0.0,-0.25,0.7071),vec4(0.25,0.6124,-0.25,-0.3536),vec4(0.25,-0.6124,-0.25,-0.3536),vec4(0.25,0.0,0.75,0.0));
+	mat4 InCols = transpose(mat4(ambientLightLowColor, SHRightLightColor, SHLeftLightColor, ambientLightColor));
+	mat4 OutCols = McInv * InCols;
+	vec4 ambientSH = vec4((vec4(1,normalVec) * OutCols).rgb, 1.0) * ambColor;
+	*/
 
 	float LdotN = max(0.0, dot(N, gubo.lightDir0));
 	vec3 halfVec = normalize(gubo.lightDir0 + V);
@@ -105,14 +124,10 @@ vec3 Case3_Color(vec3 N, vec3 V, vec3 Cs, vec3 Ca, float gamma)  {
 	vec3 LScol = Cs * max(sign(LdotN),0.0);
 	vec3 specularBlinn = LScol * pow(HdotN, gamma);
 
-
-	//const mat4 McInv = mat4(vec4(0.25,0.0,-0.25,0.7071),vec4(0.25,0.6124,-0.25,-0.3536),vec4(0.25,-0.6124,-0.25,-0.3536),vec4(0.25,0.0,0.75,0.0));
-	 //mat4 McInv = mat4(vec4(gubo.lightDir0),vec4(gubo.lightDir1),vec4(gubo.lightDir2),vec4(gubo.lightDir3));
-	mat3 McInv = mat3(gubo.lightDir1,gubo.lightDir2,gubo.lightDir3);
-	mat3 InCols = transpose(mat3(gubo.lightColor1,gubo.lightColor2, gubo.lightColor3));
+	mat3 McInv = mat3(gubo.DxColor,gubo.TopColor,gubo.DzColor);
+	mat3 InCols = transpose(mat3(Ca,specularBlinn,Cs));
 	mat3 OutCols = McInv * InCols;
-	vec3 ambientSH = ((vec3(1,N) * OutCols).rgb, 1.0) * Ca;
-	
+	vec3 ambientSH = (vec3(1,N) * OutCols).rgb * Ca;
 	return ambientSH;
 }
 
