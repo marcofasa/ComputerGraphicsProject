@@ -15,7 +15,7 @@ layout(binding = 2) uniform GlobalUniformBufferObject {
 	vec3 lightColor3;
 
 	// Ambient light parameters
-	vec3 AmbColor;	// also Bottom color for Hemispheric light,
+	vec3 AmbColor; // lA	// also Bottom color for Hemispheric light,
 					//      Constant term for Spherical Harmonics light
 	vec3 TopColor;	// also DyColor for Spherical Harmonics light
 	vec3 DzColor;
@@ -43,8 +43,12 @@ vec3 Case1_Color(vec3 N, vec3 V, vec3 Cd, vec3 Ca, float sigma) {
 	// vec3 N : normal vector
 	// vec3 V : view direction
 	// vec3 Cd : main color (diffuse color)
-	// vec3 Ca : ambient color
+	// vec3 Ca : ambient color -- mA
 	// float sigma : roughness of the material
+
+
+	//	vec4 ambientAmbient = ambientLightColor * ambColor;
+
 
 	float LdotN = max(0.0, dot(N, gubo.lightDir0));
 	vec3 diffuseLambert = Cd * LdotN;
@@ -61,7 +65,7 @@ vec3 Case1_Color(vec3 N, vec3 V, vec3 Cd, vec3 Ca, float sigma) {
 	float G = max(0.0, dot(v_i, v_r));
 	vec3 diffuseOrenNayar = diffuseLambert * (A + B * G * sin(alpha) * tan(beta));
 
-      vec3 res=(diffuseOrenNayar)*(Ca);
+      vec3 res=(diffuseOrenNayar)*gubo.lightColor0 +Ca*gubo.AmbColor;
 	return  res;
 }
 
@@ -88,7 +92,7 @@ vec3 Case2_Color(vec3 N, vec3 V, vec3 Cd, vec3 Ca) {
 	vec3 diffuseLambert = Cd * LdotN;
 	vec3 HemiDir = vec3(0.0f, 1.0f, 0.0f);
 	float amBlend = (dot(N,HemiDir) + 1.0) / 2.0;
-	vec3 ambientHemi = (Ca* amBlend + gubo.AmbColor * (1.0 - amBlend)) *diffuseLambert*gubo.TopColor;
+	vec3 ambientHemi = (Ca* amBlend + gubo.AmbColor*diffuseLambert * (1.0 - amBlend)) *gubo.TopColor;
 
 
 	
