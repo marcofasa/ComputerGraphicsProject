@@ -126,32 +126,32 @@ vec3 Case3_Color(vec3 N, vec3 V, vec3 Cs, vec3 Ca, float gamma)  {
 	float LdotN = max(0.0, dot(N, gubo.lightDir0));
 	vec3 halfVec = normalize(gubo.lightDir0 + V);
 	float HdotN = max(dot(N, halfVec), 0.0);
-	vec3 LScol = Cs * max(sign(LdotN),0.0);
+	vec3 LScol =gubo.lightColor0* Cs * max(sign(LdotN),0.0);
 	vec3 specularBlinn = LScol * pow(HdotN, gamma);
-    vec3 r=specularBlinn*gubo.lightColor0;
+    vec3 r=specularBlinn;
 
 	 LdotN = max(0.0, dot(N, gubo.lightDir1));
 	 halfVec = normalize(gubo.lightDir1 + V);
 	 HdotN = max(dot(N, halfVec), 0.0);
-	LScol = Cs * max(sign(LdotN),0.0);
+	LScol = gubo.lightColor1*Cs * max(sign(LdotN),0.0);
 	 specularBlinn = LScol * pow(HdotN, gamma);
-	 r=r+specularBlinn*gubo.lightColor1;
+	 r=r+specularBlinn;
 
 
 	 LdotN = max(0.0, dot(N, gubo.lightDir2));
 	 halfVec = normalize(gubo.lightDir2 + V);
 	 HdotN = max(dot(N, halfVec), 0.0);
-	 LScol =Cs * max(sign(LdotN),0.0);
+	 LScol = gubo.lightColor2*Cs * max(sign(LdotN),0.0);
 	 specularBlinn = LScol * pow(HdotN, gamma);
-	r=r+specularBlinn*gubo.lightColor2;
+	r=r+specularBlinn;
 
 
 	LdotN = max(0.0, dot(N, gubo.lightDir3));
 	 halfVec = normalize(gubo.lightDir3 + V);
 	 HdotN = max(dot(N, halfVec), 0.0);
-	LScol =  Cs * max(sign(LdotN),0.0);
+	LScol = gubo.lightColor3*  Cs * max(sign(LdotN),0.0);
 	specularBlinn = LScol * pow(HdotN, gamma);
-	 r=r+specularBlinn*gubo.lightColor3;
+	 r=r+specularBlinn;
 
 
 
