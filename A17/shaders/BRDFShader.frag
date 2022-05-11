@@ -92,7 +92,7 @@ vec3 Case2_Color(vec3 N, vec3 V, vec3 Cd, vec3 Ca) {
 	vec3 diffuseLambert = Cd * LdotN;
 	vec3 HemiDir = vec3(0.0f, 1.0f, 0.0f);
 	float amBlend = (dot(N,HemiDir) + 1.0) / 2.0;
-	vec3 ambientHemi =diffuseLambert * gubo.lightColor0+ (gubo.TopColor* amBlend + gubo.AmbColor*gubo.AmbColor * (1.0 - amBlend)) *Ca;
+	vec3 ambientHemi =diffuseLambert * gubo.lightColor0 + (gubo.TopColor* amBlend + gubo.AmbColor * (1.0 - amBlend)) *Ca;
 
 
 	
