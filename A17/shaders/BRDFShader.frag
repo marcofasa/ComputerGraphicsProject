@@ -135,7 +135,7 @@ vec3 Case3_Color(vec3 N, vec3 V, vec3 Cs, vec3 Ca, float gamma)  {
 	 HdotN = max(dot(N, halfVec), 0.0);
 	LScol = gubo.lightColor1*Cs * max(sign(LdotN),0.0);
 	 specularBlinn = LScol * pow(HdotN, gamma);
-	 r=r+specularBlinn;
+	 r=r+gubo.lightColor1*specularBlinn;
 
 
 	 LdotN = max(0.0, dot(N, gubo.lightDir2));
@@ -152,13 +152,12 @@ vec3 Case3_Color(vec3 N, vec3 V, vec3 Cs, vec3 Ca, float gamma)  {
 	LScol = gubo.lightColor3*  Cs * max(sign(LdotN),0.0);
 	specularBlinn = LScol * pow(HdotN, gamma);
 	 r=r+specularBlinn;
+   //UNTIL HERE IS OK
 
 
-
-	mat3 McInv = mat3(gubo.DxColor,gubo.TopColor,gubo.DzColor);
-	vec3 OutCols = McInv * Ca;
-	vec3 ambientSH = ((N * OutCols).rgb, 1.0) * gubo.AmbColor;
-    r=r+ambientSH*Ca;
+	mat3 OutCols = mat3(gubo.DxColor,gubo.TopColor,gubo.DzColor);
+	vec3 ambientSH = vec3(N * OutCols).rgb * gubo.AmbColor;
+	r=r+ambientSH*Ca;
 
 	return r;
 }
