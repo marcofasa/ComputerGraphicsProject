@@ -86,11 +86,11 @@ void Cylinder(float cx,float cy,float cz,int NSlices,float radius,float height,s
 
         Vertex v;
         v.pos=glm::vec3(cx,cy + height,cz);
-        v.norm=glm::vec3(0.0f,-1.0f,0.0f);
+        v.norm=glm::vec3(0.0f,1.0f,0.0f);
 
         vertices.push_back(v);
         v.pos=glm::vec3(cx,cy - height,cz);
-        v.norm=glm::vec3(0.0f,1.0f,0.0f);
+        v.norm=glm::vec3(0.0f,-1.0f,0.0f);
         vertices.push_back(v);
 
 
@@ -103,9 +103,12 @@ void Cylinder(float cx,float cy,float cz,int NSlices,float radius,float height,s
             //Top Vertex
             v.pos=glm::vec3 (cx+radius*cos((float)(i*2.0*M_PI/NSlices)),cy+height,cz+radius*sin((float)(i*2.0*M_PI/NSlices)));
             v.norm=glm::vec3(ux,uy,uz);
+            //v.norm=glm::vec3(0.0f,1.0f,0.0f);
+
             vertices.push_back(v);
             //Bottom Vertexes
             v.pos=glm::vec3 ( cx+radius*cos((float)(i*2.0*M_PI/NSlices)), cy-height,cz+radius*sin((float)(i*2.0*M_PI/NSlices)));
+            //v.norm=glm::vec3(0.0f,-1.0f,0.0f);
             vertices.push_back(v);
         }
 
@@ -154,48 +157,128 @@ void Cylinder(float cx,float cy,float cz,int NSlices,float radius,float height,s
         c=c+2;
         d=d+2;
     }
+
+}
+
+
+void Spring(float K,float R,float pipeRadius,int round,int stackCount,int NSlices,std::vector<Vertex>& vertices,std::vector<uint32_t>& indices){
+    /*
+     * The Spring combines the open=true Cylinder logic with a Helix formula skeleton.
+     */
+    float x1, y1, z1,x2,y2, z2;    // vertex position
+    float nx1, ny1, nz1,nx2,ny2, nz2;    // vertex position
+
+    float stackStep =  M_PI / stackCount;
+    float stackAngle1,stackAngle2;
+    int a,b, c, d;
+    int con=0;
+
+    //VERTEX definition (SPACE NEEDED -> ( (round * 2 * stackCount +1) * (2*NSlices) *3  )
+    for(int m = 0; m <=  round * 2 * stackCount; ++m) {
+        Vertex v;
+        stackAngle1 = -M_PI/2 + (m * stackStep);        // starting from -pi/2 to pi/2
+        /*
+         * Helix Formula
+         */
+        x1 = R * cosf(stackAngle1);
+        y1 = K * stackAngle1;
+        z1 = R* sinf(stackAngle1);
+        v.pos=glm::vec3(x1,y1,z1);
+        v.norm=glm::vec3(cosf(stackAngle1),0.0f,sinf(stackAngle1)),
+   vertices.push_back(v);
+
+        //Generating next point of Helix
+        stackAngle2 =  -M_PI/2 +((m+1) * stackStep);
+        x2 = R * cosf(stackAngle2);
+        y2 = K * (stackAngle2) ;
+        z2 = R * sinf(stackAngle2);
+              v.pos=glm::vec3(x2,y2,z2);
+        v.norm=glm::vec3(cosf(stackAngle2),0.0f,sinf(stackAngle2)),
+        vertices.push_back(v);
+
+
+        //PIPE VERTEX
+        for (int i = 0; i < NSlices; i++) {
+           Vertex v;
+            //Top Vertex
+            v.pos=glm::vec3(x1 + pipeRadius* sin((float) (i * 2.0 * M_PI / NSlices))*cos(stackAngle1),
+            y1 + pipeRadius * cos((float) (i * 2.0 * M_PI / NSlices)),
+            (z1 + pipeRadius * sin((float) (i * 2.0 * M_PI / NSlices))*sin(stackAngle1)));
+            nx1=sin((float) (i * 2.0 * M_PI / NSlices))*cos(stackAngle1);
+            ny1=cos((float) (i * 2.0 * M_PI / NSlices));
+            nz1=sin((float) (i * 2.0 * M_PI / NSlices))*sin(stackAngle1);
+            v.norm=glm::vec3(nx1,ny1,nz1);
+            vertices.push_back(v);
+            //Bottom Vertex
+            v.pos=glm::vec3(x2 + pipeRadius* sin((float) (i * 2.0 * M_PI / NSlices))*cos(stackAngle2),
+                       y2 + pipeRadius * cos((float) (i * 2.0 * M_PI / NSlices)),
+                       (z2 + pipeRadius * sin((float) (i * 2.0 * M_PI / NSlices))*sin(stackAngle2)));
+            nx2=sin((float) (i * 2.0 * M_PI / NSlices))*cos(stackAngle2);
+            ny2=cos((float) (i * 2.0 * M_PI / NSlices));
+            nz2=sin((float) (i * 2.0 * M_PI / NSlices))*sin(stackAngle2);
+            v.norm=glm::vec3(nx2,ny2,nz2);
+            vertices.push_back(v);
+
+
+        }
+
+        // Indices definition ( SPACE NEEDED -> (2* NSlices) *(2*round*stackCount+1) * 3 )
+        a = 2; b = 3; c =4; d = 5;
+        for (int i = 0; i < NSlices; i++) {
+
+            //PIPE
+            indices.push_back (a + (NSlices+1)*2*m);
+            indices.push_back (b + (NSlices+1)*2*m);
+            indices.push_back (d + (NSlices+1)*2*m);
+            indices.push_back (a + (NSlices+1)*2*m);
+            indices.push_back (c +(NSlices+1)*2*m);
+            indices.push_back (d +(NSlices+1)*2*m);
+            // printf(" indices %d,%d,%d,%d  \n",a,b,c,d);
+
+            a = a + 2;
+            b = b+ 2;
+            c = (c%((NSlices)*2)) + 2;
+            d = ((d)%((NSlices)*2)) + 2;
+        }
+        // printf(" indices %d,%d,%d,%d at %d  \n",a,b,c,d,m);
+        //   printf(" -------- \n");
+    }
+}
+
+void pushVertex(glm::vec3 pos,glm::vec3 norm, Vertex &v,std::vector<Vertex>& vertices){
+    v.pos=pos;
+    v.norm=norm;
+    vertices.push_back(v);
+}
+void Cube (float size,std::vector<Vertex>& vertices,std::vector<uint32_t>& indices){
+
+    Vertex v;
+    pushVertex(glm::vec3(0, 0, 0),glm::vec3(0.0f,-1.0f,0.0f),v,vertices);
+    pushVertex(glm::vec3( 0, 0, size),glm::vec3(0.0f,-1.0f,0.0f),v,vertices);
+    pushVertex(glm::vec3(0, size, size),glm::vec3(0.0f,1.0f,0.0f),v,vertices);
+    pushVertex(glm::vec3( 0, size, 0),glm::vec3(0.0f,1.0f,0.0f),v,vertices);
+    pushVertex(glm::vec3(size, 0, 0),glm::vec3(0.0f,-1.0f,0.0f),v,vertices);
+    pushVertex(glm::vec3(size, 0, size),glm::vec3(0.0f,-1.0f,0.0f),v,vertices);
+    pushVertex(glm::vec3(size, size, size),glm::vec3(0.0f,1.0f,0.0f),v,vertices);
+    pushVertex(glm::vec3(size, size, 0),glm::vec3(0.0f,1.0f,0.0f),v,vertices);
+
+
+    indices.resize(3 * 12);
+    indices ={0, 1, 2, 2, 3, 0,
+                 0, 3, 4, 4, 3, 7,   // 36 indices
+                 5, 6, 7, 7, 4, 5,   // to the vertices of
+                 1, 6, 5, 1, 2, 6,   // 12 triangles composing
+                 7, 6, 2, 3, 2, 7,   // 6 faces of a cube
+                 4, 5, 0, 1, 0, 5};
 }
 
 void makeModels() {
 //// M1 : Cube
 // Replace the code below, that creates a simple square, with the one to create a cube.
 
-// Resizes the vertices array. Repalce the values with the correct number of
-// vertices
-M1_vertices.resize(4);
-
-// first vertex of M1
-M1_vertices[0].pos  = glm::vec3(-1.0,-1.0,-1.0);
-M1_vertices[0].norm = glm::vec3(0.0,0.0,1.0);
-
+// Resizes the vertices array. Repalce the values with the correct number o
 // second vertex of M1
-M1_vertices[1].pos  = glm::vec3(1.0,-1.0,-1.0);
-M1_vertices[1].norm = glm::vec3(0.0,0.0,1.0);
-
-// third vertex of M1
-M1_vertices[2].pos  = glm::vec3(1.0,1.0,-1.0);
-M1_vertices[2].norm = glm::vec3(0.0,0.0,1.0);
-
-// fourth vertex of M1
-M1_vertices[3].pos  = glm::vec3(-1.0,1.0,-1.0);
-M1_vertices[3].norm = glm::vec3(0.0,0.0,1.0);
-
-
-// Resizes the indices array. Repalce the values with the correct number of
-// indices (3 * number of triangles)
-M1_indices.resize(3 * 2);
-
-// first triangle
-M1_indices[0] = 0;
-M1_indices[1] = 1;
-M1_indices[2] = 2;
-
-// second triangle
-M1_indices[3] = 2;
-M1_indices[4] = 3;
-M1_indices[5] = 0;
-
-
+Cube(1,M1_vertices,M1_indices);
 
 
 
@@ -205,87 +288,16 @@ M1_indices[5] = 0;
 //// M2 : Cylinder
 // Replace the code below, that creates a simple rotated square, with the one to create a cylinder.
 
-// Resizes the vertices array. Repalce the values with the correct number of
-// vertices
-
     Cylinder(0.0, 0.0, -3.0, 33, 1, 1, M2_vertices, M2_indices, true, true);
-
-
-
-
-
-
-
-
-
-
-
 
 //// M3 : Sphere
 // Replace the code below, that creates a simple triangle, with the one to create a sphere.
 
-// Resizes the vertices array. Repalce the values with the correct number of
-// vertices
     Sphere(20, 30, 2,  M3_vertices,M3_indices);
-
-// Resizes the indices array. Repalce the values with the correct number of
-// indices (3 * number of triangles)
-
-
-
-
-
-
-
 
 
 //// M4 : Spring
 // Replace the code below, that creates a simple octahedron, with the one to create a spring.
-M4_vertices.resize(6);
-
-// Vertices definitions
-M4_vertices[0].pos  = glm::vec3(0.0,1.414,-1.0);
-M4_vertices[0].norm = glm::vec3(0.0,0.0,1.0);
-M4_vertices[1].pos  = glm::vec3(0.0,-1.414,-1.0);
-M4_vertices[1].norm = glm::vec3(0.0,0.0,1.0);
-M4_vertices[2].pos  = glm::vec3(-1.0,0.0,-2.0);
-M4_vertices[2].norm = glm::vec3(0.0,0.0,1.0);
-M4_vertices[3].pos  = glm::vec3(-1.0,0.0,0.0);
-M4_vertices[3].norm = glm::vec3(0.0,-1.0,0.0);
-M4_vertices[4].pos  = glm::vec3(1.0,0.0,0.0);
-M4_vertices[4].norm = glm::vec3(0.0,-1.0,0.0);
-M4_vertices[5].pos  = glm::vec3(1.0,0.0,-2.0);
-M4_vertices[5].norm = glm::vec3(0.0,-1.0,0.0);
-
-
-// Resizes the indices array. Repalce the values with the correct number of
-// indices (3 * number of triangles)
-M4_indices.resize(3 * 8);
-
-// indices definitions
-M4_indices[0]  = 0;
-M4_indices[1]  = 2;
-M4_indices[2]  = 3;
-M4_indices[3]  = 1;
-M4_indices[4]  = 3;
-M4_indices[5]  = 2;
-M4_indices[6]  = 0;
-M4_indices[7]  = 3;
-M4_indices[8]  = 4;
-M4_indices[9]  = 1;
-M4_indices[10] = 4;
-M4_indices[11] = 3;
-M4_indices[12] = 0;
-M4_indices[13] = 4;
-M4_indices[14] = 5;
-M4_indices[15] = 1;
-M4_indices[16] = 5;
-M4_indices[17] = 4;
-M4_indices[18] = 0;
-M4_indices[19] = 5;
-M4_indices[20] = 2;
-M4_indices[21] = 1;
-M4_indices[22] = 2;
-M4_indices[23] = 5;
+    Spring(0.7,8,1,3,10,20,M4_vertices, M4_indices);
 
 }
