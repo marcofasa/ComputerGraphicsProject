@@ -155,7 +155,7 @@ vec3 Case3_Color(vec3 N, vec3 V, vec3 Cs, vec3 Ca, float gamma)  {
    //UNTIL HERE IS OK
 
 
-	mat3 OutCols = mat3(gubo.DxColor,gubo.TopColor,gubo.DzColor);
+	mat3 OutCols = mat3(gubo.DxColor,gubo.TopColor,gubo.DzColor)* gubo.AmbColor;
 	vec3 ambientSH = vec3(N * OutCols).rgb * gubo.AmbColor;
 	r=r+ambientSH*Ca;
 
