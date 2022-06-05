@@ -11,6 +11,13 @@ std::vector<Vertex> M2_vertices;
 std::vector<Vertex> M3_vertices;
 std::vector<Vertex> M4_vertices;
 
+void pushVertex(glm::vec3 pos,glm::vec3 norm, Vertex &v,std::vector<Vertex>& vertices){
+    v.pos=pos;
+    v.norm=norm;
+    vertices.push_back(v);
+}
+
+//OK
 void Sphere(int stackCount,int sectorCount,float radius,std::vector<Vertex>& vertices,std::vector<uint32_t>& indices){
     float x, y, z, xy;   // vertex position
     float sectorStep = 2 * M_PI / sectorCount;
@@ -81,6 +88,8 @@ void Sphere(int stackCount,int sectorCount,float radius,std::vector<Vertex>& ver
         }}
 }
 
+
+
 void Cylinder(float cx,float cy,float cz,int NSlices,float radius,float height,std::vector<Vertex>& vertices,std::vector<uint32_t>& indices,bool closed, bool vertical){
     // Vertices definitions ( SPACE NEEDED -> (NSlices+1)*6 )
 
@@ -118,7 +127,8 @@ void Cylinder(float cx,float cy,float cz,int NSlices,float radius,float height,s
 
 // Indices definition ( SPACE NEEDED -> 12* NSlices )
     int a=0,b=1,c=2,d=3;
-    for (int i=0;i<NSlices;i++){/*
+    for (int i=0;i<NSlices;i++){
+        /*
 
 
                             --    --                            --   --
@@ -163,6 +173,7 @@ void Cylinder(float cx,float cy,float cz,int NSlices,float radius,float height,s
 }
 
 
+//OK
 void Spring(float K,float R,float pipeRadius,int round,int stackCount,int NSlices,std::vector<Vertex>& vertices,std::vector<uint32_t>& indices){
     /*
      * The Spring combines the open=true Cylinder logic with a Helix formula skeleton.
@@ -247,50 +258,59 @@ void Spring(float K,float R,float pipeRadius,int round,int stackCount,int NSlice
     }
 }
 
-void pushVertex(glm::vec3 pos,glm::vec3 norm, Vertex &v,std::vector<Vertex>& vertices){
-    v.pos=pos;
-    v.norm=norm;
-    vertices.push_back(v);
-}
 
 void Cube (float size,std::vector<Vertex>& vertices,std::vector<uint32_t>& indices){
 
     Vertex v;
-    pushVertex(glm::vec3(0, 0, 0),glm::vec3(1.0f,0.0f,0.0f),v,vertices);
-    pushVertex(glm::vec3(0, 0, 0),glm::vec3(0.0f,1.0f,0.0f),v,vertices);
-    pushVertex(glm::vec3(0, 0, 0),glm::vec3(0.0f,0.0f,1.0f),v,vertices);
+    //0
+    pushVertex(glm::vec3(0, 0, 0),glm::vec3(-1.0f,0.0f,0.0f),v,vertices);
+    pushVertex(glm::vec3(0, 0, 0),glm::vec3(0.0f,-1.0f,0.0f),v,vertices);
+    pushVertex(glm::vec3(0, 0, 0),glm::vec3(0.0f,0.0f,-1.0f),v,vertices);
 
-
-    pushVertex(glm::vec3( 0, 0, size),glm::vec3(1.0f,0.0f,0.0f),v,vertices);
-    pushVertex(glm::vec3( 0, 0, size),glm::vec3(0.0f,1.0f,0.0f),v,vertices);
+    //1
+    pushVertex(glm::vec3( 0, 0, size),glm::vec3(-1.0f,0.0f,0.0f),v,vertices);
+    pushVertex(glm::vec3( 0, 0, size),glm::vec3(0.0f,-1.0f,0.0f),v,vertices);
     pushVertex(glm::vec3( 0, 0, size),glm::vec3(0.0f,0.0f,1.0f),v,vertices);
 
-    pushVertex(glm::vec3(0, size, size),glm::vec3(1.0f,0.0f,0.0f),v,vertices);
+    //2
+    pushVertex(glm::vec3(0, size, size),glm::vec3(-1.0f,0.0f,0.0f),v,vertices);
     pushVertex(glm::vec3(0, size, size),glm::vec3(0.0f,1.0f,0.0f),v,vertices);
     pushVertex(glm::vec3(0, size, size),glm::vec3(0.0f,0.0f,1.0f),v,vertices);
 
-    pushVertex(glm::vec3( 0, size, 0),glm::vec3(1.0f,0.0f,0.0f),v,vertices);
+    //3
+    pushVertex(glm::vec3( 0, size, 0),glm::vec3(-1.0f,0.0f,0.0f),v,vertices);
     pushVertex(glm::vec3( 0, size, 0),glm::vec3(0.0f,1.0f,0.0f),v,vertices);
-    pushVertex(glm::vec3( 0, size, 0),glm::vec3(0.0f,0.0f,1.0f),v,vertices);
+    pushVertex(glm::vec3( 0, size, 0),glm::vec3(0.0f,0.0f,-1.0f),v,vertices);
 
+    //4
     pushVertex(glm::vec3(size, 0, 0),glm::vec3(1.0f,0.0f,0.0f),v,vertices);
-    pushVertex(glm::vec3(size, 0, 0),glm::vec3(0.0f,1.0f,0.0f),v,vertices);
-    pushVertex(glm::vec3(size, 0, 0),glm::vec3(0.0f,0.0f,1.0f),v,vertices);
+    pushVertex(glm::vec3(size, 0, 0),glm::vec3(0.0f,-1.0f,0.0f),v,vertices);
+    pushVertex(glm::vec3(size, 0, 0),glm::vec3(0.0f,0.0f,-1.0f),v,vertices);
 
+    //5
     pushVertex(glm::vec3(size, 0, size),glm::vec3(1.0f,0.0f,0.0f),v,vertices);
-    pushVertex(glm::vec3(size, 0, size),glm::vec3(0.0f,1.0f,0.0f),v,vertices);
+    pushVertex(glm::vec3(size, 0, size),glm::vec3(0.0f,-1.0f,0.0f),v,vertices);
     pushVertex(glm::vec3(size, 0, size),glm::vec3(0.0f,0.0f,1.0f),v,vertices);
 
+    //6
     pushVertex(glm::vec3(size, size, size),glm::vec3(1.0f,0.0f,0.0f),v,vertices);
     pushVertex(glm::vec3(size, size, size),glm::vec3(0.0f,1.0f,0.0f),v,vertices);
-    pushVertex(glm::vec3(size, size, size),glm::vec3(0.0f,1.0f,0.0f),v,vertices);
+    pushVertex(glm::vec3(size, size, size),glm::vec3(0.0f,0.0f,1.0f),v,vertices);
 
+    //7
     pushVertex(glm::vec3(size, size, 0),glm::vec3(1.0f,0.0f,0.0f),v,vertices);
     pushVertex(glm::vec3(size, size, 0),glm::vec3(0.0f,1.0f,0.0f),v,vertices);
-    pushVertex(glm::vec3(size, size, 0),glm::vec3(0.0f,1.0f,0.0f),v,vertices);
+    pushVertex(glm::vec3(size, size, 0),glm::vec3(0.0f,0.0f,-1.0f),v,vertices);
 
 
-
+    indices.resize(3 * 12);
+    indices ={2, 4, 8, 7, 10, 2,
+              0, 11, 12, 14, 11, 23,   // 36 indices
+              17, 20, 22, 21, 13, 16,   // to the vertices of
+              3, 18, 15, 4, 7, 19,   // 12 triangles composing
+              21, 18, 6, 10, 22, 7,   // 6 faces of a cube
+              14, 17, 1, 3, 0, 15};
+/*
     indices.resize(3 * 12);
     indices ={0, 1, 2, 2, 3, 0,
                  0, 3, 4, 4, 3, 7,   // 36 indices
@@ -298,6 +318,7 @@ void Cube (float size,std::vector<Vertex>& vertices,std::vector<uint32_t>& indic
                  1, 6, 5, 1, 2, 6,   // 12 triangles composing
                  7, 6, 2, 3, 2, 7,   // 6 faces of a cube
                  4, 5, 0, 1, 0, 5};
+                 */
 }
 
 void makeModels() {
