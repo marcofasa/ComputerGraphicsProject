@@ -263,56 +263,56 @@ void Cube (float size,std::vector<Vertex>& vertices,std::vector<uint32_t>& indic
 
     Vertex v;
     //0
-    pushVertex(glm::vec3(0, 0, 0),glm::vec3(-1.0f,0.0f,0.0f),v,vertices);
     pushVertex(glm::vec3(0, 0, 0),glm::vec3(0.0f,-1.0f,0.0f),v,vertices);
+    pushVertex(glm::vec3(0, 0, 0),glm::vec3(-1.0f,0.0f,0.0f),v,vertices);
     pushVertex(glm::vec3(0, 0, 0),glm::vec3(0.0f,0.0f,-1.0f),v,vertices);
 
     //1
-    pushVertex(glm::vec3( 0, 0, size),glm::vec3(-1.0f,0.0f,0.0f),v,vertices);
     pushVertex(glm::vec3( 0, 0, size),glm::vec3(0.0f,-1.0f,0.0f),v,vertices);
+    pushVertex(glm::vec3( 0, 0, size),glm::vec3(-1.0f,0.0f,0.0f),v,vertices);
     pushVertex(glm::vec3( 0, 0, size),glm::vec3(0.0f,0.0f,1.0f),v,vertices);
 
     //2
-    pushVertex(glm::vec3(0, size, size),glm::vec3(-1.0f,0.0f,0.0f),v,vertices);
-    pushVertex(glm::vec3(0, size, size),glm::vec3(0.0f,1.0f,0.0f),v,vertices);
-    pushVertex(glm::vec3(0, size, size),glm::vec3(0.0f,0.0f,1.0f),v,vertices);
+    pushVertex(glm::vec3( size, 0,size),glm::vec3(0.0f,-1.0f,0.0f),v,vertices);
+    pushVertex(glm::vec3( size, 0,size),glm::vec3(1.0f,0.0f,0.0f),v,vertices);
+    pushVertex(glm::vec3( size,0, size),glm::vec3(0.0f,0.0f,1.0f),v,vertices);
 
     //3
-    pushVertex(glm::vec3( 0, size, 0),glm::vec3(-1.0f,0.0f,0.0f),v,vertices);
-    pushVertex(glm::vec3( 0, size, 0),glm::vec3(0.0f,1.0f,0.0f),v,vertices);
-    pushVertex(glm::vec3( 0, size, 0),glm::vec3(0.0f,0.0f,-1.0f),v,vertices);
+    pushVertex(glm::vec3( size,0,  0),glm::vec3(0.0f,-1.0f,0.0f),v,vertices);
+    pushVertex(glm::vec3( size,0,  0),glm::vec3(1.0f,0.0f,0.0f),v,vertices);
+    pushVertex(glm::vec3( size,0,  0),glm::vec3(0.0f,0.0f,-1.0f),v,vertices);
 
     //4
-    pushVertex(glm::vec3(size, 0, 0),glm::vec3(1.0f,0.0f,0.0f),v,vertices);
-    pushVertex(glm::vec3(size, 0, 0),glm::vec3(0.0f,-1.0f,0.0f),v,vertices);
-    pushVertex(glm::vec3(size, 0, 0),glm::vec3(0.0f,0.0f,-1.0f),v,vertices);
+    pushVertex(glm::vec3(0, size, 0),glm::vec3(0.0f,1.0f,0.0f),v,vertices);
+    pushVertex(glm::vec3(0, size, 0),glm::vec3(-1.0f,0.0f,0.0f),v,vertices);
+    pushVertex(glm::vec3(0, size, 0),glm::vec3(0.0f,0.0f,-1.0f),v,vertices);
 
     //5
-    pushVertex(glm::vec3(size, 0, size),glm::vec3(1.0f,0.0f,0.0f),v,vertices);
-    pushVertex(glm::vec3(size, 0, size),glm::vec3(0.0f,-1.0f,0.0f),v,vertices);
-    pushVertex(glm::vec3(size, 0, size),glm::vec3(0.0f,0.0f,1.0f),v,vertices);
+    pushVertex(glm::vec3( 0,size, size),glm::vec3(0.0f,1.0f,0.0f),v,vertices);
+    pushVertex(glm::vec3( 0,size,  size),glm::vec3(-1.0f,0.0f,0.0f),v,vertices);
+    pushVertex(glm::vec3( 0,size, size),glm::vec3(0.0f,0.0f,1.0f),v,vertices);
 
     //6
-    pushVertex(glm::vec3(size, size, size),glm::vec3(1.0f,0.0f,0.0f),v,vertices);
     pushVertex(glm::vec3(size, size, size),glm::vec3(0.0f,1.0f,0.0f),v,vertices);
+    pushVertex(glm::vec3(size, size, size),glm::vec3(1.0f,0.0f,0.0f),v,vertices);
     pushVertex(glm::vec3(size, size, size),glm::vec3(0.0f,0.0f,1.0f),v,vertices);
 
     //7
-    pushVertex(glm::vec3(size, size, 0),glm::vec3(1.0f,0.0f,0.0f),v,vertices);
     pushVertex(glm::vec3(size, size, 0),glm::vec3(0.0f,1.0f,0.0f),v,vertices);
+    pushVertex(glm::vec3(size, size, 0),glm::vec3(1.0f,0.0f,0.0f),v,vertices);
     pushVertex(glm::vec3(size, size, 0),glm::vec3(0.0f,0.0f,-1.0f),v,vertices);
 
 
     indices.resize(3 * 12);
-    indices ={2, 4, 8, 7, 10, 2,
-              0, 11, 12, 14, 11, 23,   // 36 indices
-              17, 20, 22, 21, 13, 16,   // to the vertices of
-              3, 18, 15, 4, 7, 19,   // 12 triangles composing
-              21, 18, 6, 10, 22, 7,   // 6 faces of a cube
-              14, 17, 1, 3, 0, 15};
+    indices ={0, 3, 6, 6, 9, 0,
+              2, 11, 14, 14, 11, 23,   // 36 indices
+              15, 18, 21, 21, 12, 15,   // to the vertices of
+              5, 20, 17, 5, 8, 20,   // 12 triangles composing
+              22, 19, 7, 10, 7, 22,   // 6 faces of a cube
+              13, 16, 1, 4, 1, 16};
 /*
     indices.resize(3 * 12);
-    indices ={0, 1, 2, 2, 3, 0,
+    indices ={   0, 1, 2, 2, 3, 0,
                  0, 3, 4, 4, 3, 7,   // 36 indices
                  5, 6, 7, 7, 4, 5,   // to the vertices of
                  1, 6, 5, 1, 2, 6,   // 12 triangles composing
