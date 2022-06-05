@@ -1,6 +1,14 @@
 #version 450
 #extension GL_ARB_separate_shader_objects : enable
 
+vec3 Blinn_Specular_BRDF(vec3 L, vec3 N, vec3 V, vec3 C, float gamma)  {
+	vec3 h = normalize(L + V);
+	float alpha = dot(N,h); // angle between the half vector h and the normal vector n
+	float intensity = pow(clamp(alpha,0.0f,1.0f),gamma); // cos^gamma(alpha) positive values
+
+	return C * intensity;
+}
+
 layout(binding = 1) uniform sampler2D texSampler;
 
 layout(binding = 2) uniform GlobalUniformBufferObject {
@@ -123,43 +131,18 @@ vec3 Case3_Color(vec3 N, vec3 V, vec3 Cs, vec3 Ca, float gamma)  {
 	vec4 ambientSH = vec4((vec4(1,normalVec) * OutCols).rgb, 1.0) * ambColor;
 	*/
 
-	float LdotN = max(0.0, dot(N, gubo.lightDir0));
-	vec3 halfVec = normalize(gubo.lightDir0 + V);
-	float HdotN = max(dot(N, halfVec), 0.0);
-	vec3 LScol =gubo.lightColor0* Cs * max(sign(LdotN),0.0);
-	vec3 specularBlinn = LScol * pow(HdotN, gamma);
-    vec3 r=specularBlinn;
+	// direct light influence (4 sources)
+	vec3 D0 = gubo.lightColor0 * Blinn_Specular_BRDF(gubo.lightDir0,N,V,Cs,gamma);
+	vec3 D1 = gubo.lightColor1 * Blinn_Specular_BRDF(gubo.lightDir1,N,V,Cs,gamma);
+	vec3 D2 = gubo.lightColor2 * Blinn_Specular_BRDF(gubo.lightDir2,N,V,Cs,gamma);
+	vec3 D3 = gubo.lightColor3 * Blinn_Specular_BRDF(gubo.lightDir3,N,V,Cs,gamma);
+	vec3 D = D0 + D1 + D2 + D3;
 
-	 LdotN = max(0.0, dot(N, gubo.lightDir1));
-	 halfVec = normalize(gubo.lightDir1 + V);
-	 HdotN = max(dot(N, halfVec), 0.0);
-	LScol = gubo.lightColor1*Cs * max(sign(LdotN),0.0);
-	 specularBlinn = LScol * pow(HdotN, gamma);
-	 r=r+gubo.lightColor1*specularBlinn;
+	// ambiental light influence (spherical harmonics)
+	vec3 A = Ca * (gubo.AmbColor + N.x*gubo.DxColor + N.y*gubo.TopColor + N.z*gubo.DzColor);
 
+	return D + A;
 
-	 LdotN = max(0.0, dot(N, gubo.lightDir2));
-	 halfVec = normalize(gubo.lightDir2 + V);
-	 HdotN = max(dot(N, halfVec), 0.0);
-	 LScol = gubo.lightColor2*Cs * max(sign(LdotN),0.0);
-	 specularBlinn = LScol * pow(HdotN, gamma);
-	r=r+specularBlinn;
-
-
-	LdotN = max(0.0, dot(N, gubo.lightDir3));
-	 halfVec = normalize(gubo.lightDir3 + V);
-	 HdotN = max(dot(N, halfVec), 0.0);
-	LScol = gubo.lightColor3*  Cs * max(sign(LdotN),0.0);
-	specularBlinn = LScol * pow(HdotN, gamma);
-	 r=r+specularBlinn;
-   //UNTIL HERE IS OK
-
-
-	mat3 OutCols = mat3(gubo.DxColor,gubo.TopColor,gubo.DzColor)* gubo.AmbColor;
-	vec3 ambientSH = vec3(N * OutCols).rgb * gubo.AmbColor;
-	r=r+ambientSH*Ca;
-
-	return r;
 }
 
 

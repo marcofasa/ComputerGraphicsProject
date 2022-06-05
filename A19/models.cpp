@@ -9,6 +9,105 @@ struct Vertex {
 
 std::vector<Vertex> M1_vertices;
 std::vector<Vertex> M2_vertices;
+void Cube (float size,std::vector<Vertex>& vertices,std::vector<uint32_t>& indices){
+
+    Vertex v;
+    pushVertex(glm::vec3(0, 0, 0),glm::vec3(0.0f,-1.0f,0.0f),v,vertices);
+    pushVertex(glm::vec3( 0, 0, size),glm::vec3(0.0f,-1.0f,0.0f),v,vertices);
+    pushVertex(glm::vec3(0, size, size),glm::vec3(0.0f,1.0f,0.0f),v,vertices);
+    pushVertex(glm::vec3( 0, size, 0),glm::vec3(0.0f,1.0f,0.0f),v,vertices);
+    pushVertex(glm::vec3(size, 0, 0),glm::vec3(0.0f,-1.0f,0.0f),v,vertices);
+    pushVertex(glm::vec3(size, 0, size),glm::vec3(0.0f,-1.0f,0.0f),v,vertices);
+    pushVertex(glm::vec3(size, size, size),glm::vec3(0.0f,1.0f,0.0f),v,vertices);
+    pushVertex(glm::vec3(size, size, 0),glm::vec3(0.0f,1.0f,0.0f),v,vertices);
+
+
+    indices.resize(3 * 12);
+    indices ={0, 1, 2, 2, 3, 0,
+              0, 3, 4, 4, 3, 7,   // 36 indices
+              5, 6, 7, 7, 4, 5,   // to the vertices of
+              1, 6, 5, 1, 2, 6,   // 12 triangles composing
+              7, 6, 2, 3, 2, 7,   // 6 faces of a cube
+              4, 5, 0, 1, 0, 5};
+}
+void Cylinder(float cx,float cy,float cz,int NSlices,float radius,float height,std::vector<Vertex>& vertices,std::vector<uint32_t>& indices,bool closed, bool vertical){
+    // Vertices definitions ( SPACE NEEDED -> (NSlices+1)*6 )
+
+    Vertex v;
+    v.pos=glm::vec3(cx,cy + height,cz);
+    v.norm=glm::vec3(0.0f,1.0f,0.0f);
+
+    vertices.push_back(v);
+    v.pos=glm::vec3(cx,cy - height,cz);
+    v.norm=glm::vec3(0.0f,-1.0f,0.0f);
+    vertices.push_back(v);
+
+
+
+    for(int i=0;i<NSlices;i++){
+        Vertex v;
+        float ux = cos((float)(i*2.0*M_PI/NSlices));
+        float uy = 0.0f;
+        float uz = sin((float)(i*2.0*M_PI/NSlices));
+        //Top Vertex
+        v.pos=glm::vec3 (cx+radius*cos((float)(i*2.0*M_PI/NSlices)),cy+height,cz+radius*sin((float)(i*2.0*M_PI/NSlices)));
+        v.norm=glm::vec3(ux,uy,uz);
+        //v.norm=glm::vec3(0.0f,1.0f,0.0f);
+
+        vertices.push_back(v);
+        //Bottom Vertexes
+        v.pos=glm::vec3 ( cx+radius*cos((float)(i*2.0*M_PI/NSlices)), cy-height,cz+radius*sin((float)(i*2.0*M_PI/NSlices)));
+        //v.norm=glm::vec3(0.0f,-1.0f,0.0f);
+        vertices.push_back(v);
+    }
+
+// Indices definition ( SPACE NEEDED -> 12* NSlices )
+    int a=0,b=1,c=2,d=3;
+    for (int i=0;i<NSlices;i++){/*
+
+
+                            --    --                            --   --
+                       --              --                --               --
+
+                   --                      --        --                        --
+
+                 --                           --    --                            --
+                                 O                                 1
+                 18              |            --   20              |            --
+                                 |                                 |
+                     19          |          3         21           |         5
+                                 |                                 |
+                                 2                                 4
+
+         */
+
+        //TOP
+        if(closed){
+            indices.push_back (0);
+            indices.push_back ((a) +2);
+            indices.push_back ((c% ((NSlices)*2)) +2);}
+
+        //BODY
+        indices.push_back ((a) +2);
+        indices.push_back ((b) +2);
+        indices.push_back ((d% ((NSlices)*2)) +2);
+        indices.push_back ((a) +2 );
+        indices.push_back ((c% ((NSlices)*2)) +2);
+        indices.push_back ((d% ((NSlices)*2)) +2);
+
+        //BOTTOM
+        if(closed){
+            indices.push_back (1);
+            indices.push_back ((b% ((NSlices)*2)) +2 );
+            indices.push_back ((d % ((NSlices)*2)) +2);}
+
+        a=a+2;
+        b=b+2;
+        c=c+2;
+        d=d+2;
+    }
+
+}
 
 
 void makeModels() {
