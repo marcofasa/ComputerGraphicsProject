@@ -287,7 +287,7 @@ void makeModels() {
 //// M2 : Cylinder
 // Replace the code below, that creates a simple rotated square, with the one to create a cylinder.
 
-    Cylinder(0.0, 0.0, -3.0, 6, 1, 1, M2_vertices, M2_indices, true, true);
+    Cylinder(0.0, 0.0, -3.0, 33, 1, 1, M2_vertices, M2_indices, true, true);
 
 
 }
