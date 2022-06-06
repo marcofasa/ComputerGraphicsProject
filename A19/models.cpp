@@ -104,27 +104,47 @@ void Cylinder(float cx,float cy,float cz,int NSlices,float radius,float height,s
 
     Vertex v;
     //Top center (0)
-    pushVertex(glm::vec3(cx,cy + height,cz),glm::vec3(0.0f,1.0f,0.0f),glm::vec2(0,0),v,vertices);
+    pushVertex(glm::vec3(cx,cy + height,cz),glm::vec3(0.0f,1.0f,0.0f),glm::vec2(0.625,0.125),v,vertices);
 
 
     //Bottom center (1)
-    pushVertex(glm::vec3(cx,cy - height,cz),glm::vec3(0.0f,-1.0f,0.0f),glm::vec2(0,0),v,vertices);
+    pushVertex(glm::vec3(cx,cy - height,cz),glm::vec3(0.0f,-1.0f,0.0f),glm::vec2(0.875,0.125),v,vertices);
 
 
 
 
     for(int i=0;i<NSlices;i++){
+        float U,V;
+        float textR=0.125;
         Vertex v;
-        float ux = cos((float)(i*2.0*M_PI/NSlices));
+        float tetha=(float)(i*2.0*M_PI/NSlices);
+
+        float ux = cos(tetha);
         float uy = 0.0f;
-        float uz = sin((float)(i*2.0*M_PI/NSlices));
+        float uz = sin(tetha);
+
         //Top Vertex
-        v.pos=glm::vec3 (cx+radius*cos((float)(i*2.0*M_PI/NSlices)),cy+height,cz+radius*sin((float)(i*2.0*M_PI/NSlices)));
+        v.pos=glm::vec3 (cx+radius*cos(tetha),cy+height,cz+radius*sin(tetha));
         //Vertical norm
         v.norm=glm::vec3(0.0f,1.0f,0.0f);
+
+        //UV
+        U=0.625+textR*cos(tetha);
+        V=0.125+textR*sin(tetha);
+        v.UV=glm::vec2(U,V);
+
+
         vertices.push_back(v);
         //horizontal norm
         v.norm=glm::vec3(ux,uy,uz);
+
+        float range=0.5*i/NSlices;
+
+        //UV
+        U=0.5+range;
+        V=0.25;
+        v.UV=glm::vec2(U,V);
+
         vertices.push_back(v);
 
 
@@ -132,10 +152,22 @@ void Cylinder(float cx,float cy,float cz,int NSlices,float radius,float height,s
         v.pos=glm::vec3 ( cx+radius*cos((float)(i*2.0*M_PI/NSlices)), cy-height,cz+radius*sin((float)(i*2.0*M_PI/NSlices)));
         //Vertical Norm
         v.norm=glm::vec3(0.0f,-1.0f,0.0f);
+
+        //UV
+        U=0.875+textR*cos(tetha);
+        V=0.125+textR*sin(tetha);
+        v.UV=glm::vec2(U,V);
+
+
         vertices.push_back(v);
+
+
         //Horizontal Norm
         v.norm=glm::vec3(ux,uy,uz);
-
+        //UV
+        U=0.5+range;
+        V=0.5;
+        v.UV=glm::vec2(U,V);
         vertices.push_back(v);
 
     }
@@ -207,38 +239,7 @@ void makeModels() {
 //// M2 : Cylinder
 // Replace the code below, that creates a simple rotated square, with the one to create a cylinder.
 
-// Resizes the vertices array. Repalce the values with the correct number of
-// vertices
-M2_vertices.resize(4);
+    Cylinder(0.0, 0.0, -3.0, 33, 1, 1, M2_vertices, M2_indices, true, true);
 
-// Vertices definitions
-M2_vertices[0].pos  = glm::vec3(0.0,-1.0,-1.1);
-M2_vertices[0].norm = glm::vec3(0.0,0.0,1.0);
-M2_vertices[0].UV   = glm::vec2(0.0,1.0);
-
-M2_vertices[1].pos  = glm::vec3(1.0,0.0,-1.1);
-M2_vertices[1].norm = glm::vec3(0.0,0.0,1.0);
-M2_vertices[1].UV   = glm::vec2(1.0,1.0);
-
-M2_vertices[2].pos  = glm::vec3(0.0,1.0,-1.1);
-M2_vertices[2].norm = glm::vec3(0.0,0.0,1.0);
-M2_vertices[2].UV   = glm::vec2(1.0,0.0);
-
-M2_vertices[3].pos  = glm::vec3(-1.0,0.0,-1.1);
-M2_vertices[3].norm = glm::vec3(0.0,0.0,1.0);
-M2_vertices[3].UV   = glm::vec2(0.0,0.0);
-
-
-// Resizes the indices array. Repalce the values with the correct number of
-// indices (3 * number of triangles)
-M2_indices.resize(6);
-
-// indices definitions
-M2_indices[0] = 0;
-M2_indices[1] = 1;
-M2_indices[2] = 2;
-M2_indices[3] = 2;
-M2_indices[4] = 3;
-M2_indices[5] = 0;
 
 }
