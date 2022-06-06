@@ -94,11 +94,11 @@ void Cylinder(float cx,float cy,float cz,int NSlices,float radius,float height,s
     // Vertices definitions ( SPACE NEEDED -> (NSlices+1)*6 )
 
         Vertex v;
-        //Top center
+        //Top center (0)
         pushVertex(glm::vec3(cx,cy + height,cz),glm::vec3(0.0f,1.0f,0.0f),v,vertices);
 
 
-        //Bottom center
+        //Bottom center (1)
         pushVertex(glm::vec3(cx,cy - height,cz),glm::vec3(0.0f,-1.0f,0.0f),v,vertices);
 
 
@@ -121,15 +121,18 @@ void Cylinder(float cx,float cy,float cz,int NSlices,float radius,float height,s
 
             //Bottom Vertexes
             v.pos=glm::vec3 ( cx+radius*cos((float)(i*2.0*M_PI/NSlices)), cy-height,cz+radius*sin((float)(i*2.0*M_PI/NSlices)));
-        v.norm=glm::vec3(ux,uy,uz);
+            //Vertical Norm
+        v.norm=glm::vec3(0.0f,-1.0f,0.0f);
         vertices.push_back(v);
-            v.norm=glm::vec3(0.0f,-1.0f,0.0f);
-            vertices.push_back(v);
+        //Horizontal Norm
+        v.norm=glm::vec3(ux,uy,uz);
+
+        vertices.push_back(v);
 
         }
 
 // Indices definition ( SPACE NEEDED -> 12* NSlices )
-    int a=0,b=1,c=2,d=3;
+    int a=0,b=1,c=2,d=3,top=0,bot=0;
     for (int i=0;i<NSlices;i++){/*
 
 
@@ -144,29 +147,36 @@ void Cylinder(float cx,float cy,float cz,int NSlices,float radius,float height,s
                                  |                                 |
                      19          |          3         21           |         5
                                  |                                 |
-                                 2                                 4
+                                 2(3)                               4
 
          */
 
         //TOP
-        if(closed){
             indices.push_back (0);
-            indices.push_back ((a) +2);
-            indices.push_back ((c% ((NSlices)*2)) +2);}
+            indices.push_back (top+2);
+            indices.push_back ((top+4)%(NSlices*4) +2);
+        std::cout<<"T("<<top+2<<","<<(top+4)%(NSlices*4)+2<<"\n";
+
+        top=top+4;
 
         //BODY
+        /*
         indices.push_back ((a) +2);
         indices.push_back ((b) +2);
         indices.push_back ((d% ((NSlices)*2)) +2);
         indices.push_back ((a) +2 );
         indices.push_back ((c% ((NSlices)*2)) +2);
         indices.push_back ((d% ((NSlices)*2)) +2);
+         */
 
         //BOTTOM
-        if(closed){
+
             indices.push_back (1);
-            indices.push_back ((b% ((NSlices)*2)) +2 );
-            indices.push_back ((d % ((NSlices)*2)) +2);}
+            indices.push_back (bot +4);
+            indices.push_back ((bot+4)%((NSlices)*4)  +4);
+        //std::cout<<"B("<<bot+4<<","<<(bot+4)%((NSlices)*4)  +4<<"\n";
+
+        bot=bot+4;
 
         a=a+2;
         b=b+2;
@@ -341,7 +351,7 @@ Cube(1,M1_vertices,M1_indices);
 //// M2 : Cylinder
 // Replace the code below, that creates a simple rotated square, with the one to create a cylinder.
 
-    Cylinder(0.0, 0.0, -3.0, 33, 1, 1, M2_vertices, M2_indices, true, true);
+    Cylinder(0.0, 0.0, -3.0, 6, 1, 1, M2_vertices, M2_indices, true, true);
 
 //// M3 : Sphere
 // Replace the code below, that creates a simple triangle, with the one to create a sphere.
