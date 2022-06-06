@@ -111,6 +111,8 @@ void Cylinder(float cx,float cy,float cz,int NSlices,float radius,float height,s
     pushVertex(glm::vec3(cx,cy - height,cz),glm::vec3(0.0f,-1.0f,0.0f),glm::vec2(0.875,0.125),v,vertices);
 
 
+Vertex firstVertexTop;
+    Vertex firstVertexBottom;
 
 
     for(int i=0;i<NSlices;i++){
@@ -128,6 +130,7 @@ void Cylinder(float cx,float cy,float cz,int NSlices,float radius,float height,s
         //Vertical norm
         v.norm=glm::vec3(0.0f,1.0f,0.0f);
 
+
         //UV
         U=0.625+textR*cos(tetha);
         V=0.125+textR*sin(tetha);
@@ -137,12 +140,13 @@ void Cylinder(float cx,float cy,float cz,int NSlices,float radius,float height,s
         vertices.push_back(v);
         //horizontal norm
         v.norm=glm::vec3(ux,uy,uz);
+        if(i==0){
+            firstVertexTop=v;
+        }
 
         //Range for UV of the side of the cylinder
-        float range=0.5*i/(NSlices-1);
-        if (range==0.5){
-           // range=0;
-        }
+        float range=0.5*i/(NSlices);
+
         std::cout<<range<<'\n';
         //UV
         U=0.5+range;
@@ -158,6 +162,8 @@ void Cylinder(float cx,float cy,float cz,int NSlices,float radius,float height,s
         //Vertical Norm
         v.norm=glm::vec3(0.0f,-1.0f,0.0f);
 
+
+
         //UV
         U=0.875+textR*cos(tetha);
         V=0.125+textR*sin(tetha);
@@ -170,6 +176,12 @@ void Cylinder(float cx,float cy,float cz,int NSlices,float radius,float height,s
 
         //Horizontal Norm
         v.norm=glm::vec3(ux,uy,uz);
+
+        if(i==0){
+            firstVertexBottom=v;
+        }
+
+
         //UV
         U=0.5+range;
         V=0.5;
@@ -179,6 +191,14 @@ void Cylinder(float cx,float cy,float cz,int NSlices,float radius,float height,s
         vertices.push_back(v);
 
     }
+
+    //Re pushing the first UVs to the last
+    firstVertexTop.UV=glm::vec2(1,0.25);
+    vertices.push_back(firstVertexTop);
+
+    firstVertexBottom.UV=glm::vec2(1,0.5);
+    vertices.push_back(firstVertexBottom);
+
 
 // Indices definition ( SPACE NEEDED -> 12* NSlices )
     int a=0,b=1,c=2,d=3,top=0,bot=0;
@@ -204,7 +224,6 @@ void Cylinder(float cx,float cy,float cz,int NSlices,float radius,float height,s
         indices.push_back (0);
         indices.push_back (top+2);
         indices.push_back ((top+4)%(NSlices*4) +2);
-        std::cout<<"T("<<top+2<<","<<(top+4)%(NSlices*4)+2<<"\n";
 
 
 
@@ -212,11 +231,32 @@ void Cylinder(float cx,float cy,float cz,int NSlices,float radius,float height,s
 
         indices.push_back (bot +5);
         indices.push_back (top+3);
-        indices.push_back ((top+4)%(NSlices*4) +3);
+        if((top+4)%(NSlices*4)==0){
+            indices.push_back (NSlices*4+2);
+
+        }else{
+            indices.push_back ((top+4)%(NSlices*4) +3);
+
+        }
+        std::cout<<"T("<<top+4<<"\n";
+
+
 
         indices.push_back (bot +5);
-        indices.push_back ((bot+4)%((NSlices)*4)  +5);
-        indices.push_back ((top+4)%(NSlices*4) +3);
+        if((bot+4)%((NSlices)*4)==0){
+            indices.push_back ((vertices.size()-1));
+
+        }else{
+            indices.push_back ((bot+4)%((NSlices)*4)  +5);
+        }
+
+        //std::cout<<"B("<<top+4<<","<<(bot+4)<<"\n";
+        if((top+4)%(NSlices*4)==0){
+            indices.push_back ((vertices.size()-2));
+        }
+        else{
+            indices.push_back ((top+4)%(NSlices*4) +3);
+        }
 
 
 
