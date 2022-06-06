@@ -9,6 +9,26 @@ struct Vertex {
 
 std::vector<Vertex> M1_vertices;
 std::vector<Vertex> M2_vertices;
+
+
+/*
+ *
+vt 0.251680 0.998907
+vt 0.127226 0.998907
+vt 0.127226 0.874454
+vt 0.251680 0.874453
+vt 0.127226 0.750000
+vt 0.251680 0.750000
+vt 0.127226 0.625547
+vt 0.251680 0.625547
+vt 0.127226 0.501093
+vt 0.251680 0.501093
+vt 0.376133 0.750000
+vt 0.376133 0.625547
+vt 0.002773 0.750000
+vt 0.002773 0.625547
+ */
+
 void Cube (float size,std::vector<Vertex>& vertices,std::vector<uint32_t>& indices){
 
     Vertex v;
