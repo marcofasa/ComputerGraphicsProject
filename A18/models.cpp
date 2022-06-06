@@ -143,11 +143,11 @@ void Cylinder(float cx,float cy,float cz,int NSlices,float radius,float height,s
 
                  --                           --    --                            --
                                  O                                 1
-                 18              |            --   20              |            --
+                 20(21)          |            --  18(19)           |            --
                                  |                                 |
-                     19          |          3         21           |         5
+                     22(23)      |          6(7)         24(25)    |         8(9)
                                  |                                 |
-                                 2(3)                               4
+                                 2(3)                               4(5)
 
          */
 
@@ -157,17 +157,19 @@ void Cylinder(float cx,float cy,float cz,int NSlices,float radius,float height,s
             indices.push_back ((top+4)%(NSlices*4) +2);
         std::cout<<"T("<<top+2<<","<<(top+4)%(NSlices*4)+2<<"\n";
 
-        top=top+4;
+
 
         //BODY
-        /*
-        indices.push_back ((a) +2);
-        indices.push_back ((b) +2);
-        indices.push_back ((d% ((NSlices)*2)) +2);
-        indices.push_back ((a) +2 );
-        indices.push_back ((c% ((NSlices)*2)) +2);
-        indices.push_back ((d% ((NSlices)*2)) +2);
-         */
+
+        indices.push_back (bot +5);
+        indices.push_back (top+3);
+        indices.push_back ((top+4)%(NSlices*4) +3);
+
+        indices.push_back (bot +5);
+        indices.push_back ((bot+4)%((NSlices)*4)  +5);
+        indices.push_back ((top+4)%(NSlices*4) +3);
+
+
 
         //BOTTOM
 
@@ -177,7 +179,7 @@ void Cylinder(float cx,float cy,float cz,int NSlices,float radius,float height,s
         //std::cout<<"B("<<bot+4<<","<<(bot+4)%((NSlices)*4)  +4<<"\n";
 
         bot=bot+4;
-
+        top=top+4;
         a=a+2;
         b=b+2;
         c=c+2;
@@ -351,7 +353,7 @@ Cube(1,M1_vertices,M1_indices);
 //// M2 : Cylinder
 // Replace the code below, that creates a simple rotated square, with the one to create a cylinder.
 
-    Cylinder(0.0, 0.0, -3.0, 6, 1, 1, M2_vertices, M2_indices, true, true);
+    Cylinder(0.0, 0.0, -3.0, 33, 1, 1, M2_vertices, M2_indices, true, true);
 
 //// M3 : Sphere
 // Replace the code below, that creates a simple triangle, with the one to create a sphere.

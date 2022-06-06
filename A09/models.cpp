@@ -103,9 +103,11 @@ void Cylinder(float cx,float cy,float cz,int NSlices,float radius,float height,s
         indices.push_back ((c% ((NSlices)*2)) +2);}
 
         //BODY
+        //2 top+1 bottom
         indices.push_back ((a) +2);
         indices.push_back ((b) +2);
         indices.push_back ((d% ((NSlices)*2)) +2);
+        //1 top+ 2 bottom
         indices.push_back ((a) +2 );
         indices.push_back ((c% ((NSlices)*2)) +2);
         indices.push_back ((d% ((NSlices)*2)) +2);
