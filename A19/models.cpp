@@ -138,12 +138,17 @@ void Cylinder(float cx,float cy,float cz,int NSlices,float radius,float height,s
         //horizontal norm
         v.norm=glm::vec3(ux,uy,uz);
 
-        float range=0.5*i/NSlices;
-
+        //Range for UV of the side of the cylinder
+        float range=0.5*i/(NSlices-1);
+        if (range==0.5){
+           // range=0;
+        }
+        std::cout<<range<<'\n';
         //UV
         U=0.5+range;
         V=0.25;
         v.UV=glm::vec2(U,V);
+        std::cout<<U<<','<<V<<'\n';
 
         vertices.push_back(v);
 
@@ -159,6 +164,7 @@ void Cylinder(float cx,float cy,float cz,int NSlices,float radius,float height,s
         v.UV=glm::vec2(U,V);
 
 
+
         vertices.push_back(v);
 
 
@@ -168,6 +174,8 @@ void Cylinder(float cx,float cy,float cz,int NSlices,float radius,float height,s
         U=0.5+range;
         V=0.5;
         v.UV=glm::vec2(U,V);
+        std::cout<<U<<','<<V<<'\n';
+        std::cout<<"--------\n";
         vertices.push_back(v);
 
     }
@@ -239,7 +247,7 @@ void makeModels() {
 //// M2 : Cylinder
 // Replace the code below, that creates a simple rotated square, with the one to create a cylinder.
 
-    Cylinder(0.0, 0.0, -3.0, 33, 1, 1, M2_vertices, M2_indices, true, true);
+    Cylinder(0.0, 0.0, -3.0, 6, 1, 1, M2_vertices, M2_indices, true, true);
 
 
 }
