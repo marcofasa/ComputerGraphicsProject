@@ -279,6 +279,7 @@ void Cube (float size){
 }
 
 void makeModels() {
+
 //// M1 : Cube
 
     Cube(1);
@@ -293,5 +294,5 @@ void makeModels() {
 
 //// M4 : Spring
 
-    Spring(0.7,8,1,3,8,20,M4_vertices, M4_indices);
+    Spring(0.7,8,1,3,20,20,M4_vertices, M4_indices);
 }
