@@ -1,5 +1,5 @@
 # ComputerGraphicsProject
-Assignments and Final project od Computer Graphics course - Polimi
+Assignments and Final project of Computer Graphics course - Polimi
 
 
 To compile  GLSL sources to the corresponding SPIR-V binaries:
